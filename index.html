@@ -33,6 +33,68 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Inter',sans-ser
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:#2a2a2a;}
 
+/* ── START SCREEN ── */
+#start-screen{
+  position:fixed;
+  inset:0;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:32px;
+  z-index:300;
+  padding:24px;
+}
+#start-screen.hidden{display:none;}
+.start-title{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:300;
+  font-size:4rem;
+  letter-spacing:0.12em;
+  color:var(--accent);
+  text-align:center;
+  line-height:1.2;
+}
+.start-subtitle{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.75rem;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  text-align:center;
+}
+.start-desc{
+  max-width:480px;
+  text-align:center;
+  color:var(--text-secondary);
+  line-height:1.8;
+  font-size:0.9rem;
+}
+.btn-start{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.75rem;
+  letter-spacing:0.25em;
+  text-transform:uppercase;
+  padding:16px 40px;
+  background:transparent;
+  cursor:pointer;
+  transition:all 250ms ease;
+  border:1px solid var(--accent-dim);
+  color:var(--accent);
+  margin-top:20px;
+}
+.btn-start:hover{
+  background:rgba(200,184,150,0.1);
+  border-color:var(--accent);
+  transform:translateY(-2px);
+}
+@media(max-width:600px){
+  .start-title{font-size:2.5rem;}
+  .start-subtitle{font-size:0.65rem;}
+  .start-desc{font-size:0.85rem;}
+}
+
 /* ── LAYOUT ── */
 #game{display:grid;grid-template-rows:auto 1fr auto;height:100vh;max-width:960px;margin:0 auto;}
 @media(max-width:600px){#game{height:auto;min-height:100vh;}}
@@ -67,9 +129,9 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Inter',sans-ser
 .crime-card.selected{border-color:var(--accent-dim);background:#181510;}
 .crime-card.assigned{border-color:var(--success);opacity:0.6;cursor:default;}
 .crime-card.ignored{opacity:0.3;cursor:default;}
-.crime-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
-.crime-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.05rem;letter-spacing:0.03em;}
-.crime-reward{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--accent);letter-spacing:0.1em;}
+.crime-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;gap:12px;}
+.crime-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.05rem;letter-spacing:0.03em;flex:1;}
+.crime-reward{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--accent);letter-spacing:0.1em;white-space:nowrap;}
 .crime-desc{color:var(--text-secondary);font-size:0.82rem;line-height:1.65;margin-bottom:12px;}
 .crime-stats{display:flex;gap:12px;}
 .stat-pip{display:flex;align-items:center;gap:6px;}
@@ -93,12 +155,45 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Inter',sans-ser
 .det-name{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1rem;}
 .det-age{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--text-muted);}
 .det-traits{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
-.trait{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--border);color:var(--text-muted);}
+.trait{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--border);color:var(--text-muted);position:relative;cursor:help;}
 .trait.corrupt{border-color:var(--danger-dim);color:var(--danger);}
 .trait.sick{border-color:var(--warn);color:var(--warn-bright);}
+.trait.positive{border-color:var(--accent-dim);color:var(--accent-dim);}
+.trait:hover{border-color:var(--border-active);}
 .det-status{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--text-muted);margin-top:6px;}
 .det-status.unavail{color:var(--danger);}
 .salary-label{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--text-muted);}
+
+/* Tooltip */
+.trait[data-tooltip]:hover::after{
+  content:attr(data-tooltip);
+  position:absolute;
+  bottom:calc(100% + 8px);
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--bg-raised);
+  border:1px solid var(--border-active);
+  padding:8px 12px;
+  font-size:0.7rem;
+  white-space:nowrap;
+  z-index:1000;
+  pointer-events:none;
+  letter-spacing:0.05em;
+  text-transform:none;
+  color:var(--text-secondary);
+  box-shadow:0 4px 12px rgba(0,0,0,0.4);
+}
+.trait[data-tooltip]:hover::before{
+  content:'';
+  position:absolute;
+  bottom:calc(100% + 2px);
+  left:50%;
+  transform:translateX(-50%);
+  border:6px solid transparent;
+  border-top-color:var(--border-active);
+  z-index:1000;
+  pointer-events:none;
+}
 
 /* ── BONUS CARDS ── */
 .bonus-card{border:1px solid var(--border);background:var(--bg-card);padding:14px 18px;cursor:pointer;transition:border-color 180ms ease;animation:fadeUp 300ms ease backwards;}
@@ -117,6 +212,20 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Inter',sans-ser
 .btn.danger{border-color:var(--danger-dim);color:var(--text-muted);}
 .btn.danger:hover{border-color:var(--danger);color:var(--danger);background:rgba(139,58,58,0.06);}
 .btn.small{padding:7px 14px;font-size:0.6rem;}
+.btn.assign-cta{
+  border:2px solid var(--accent);
+  color:var(--accent);
+  background:rgba(200,184,150,0.08);
+  font-size:0.72rem;
+  padding:14px 28px;
+  font-weight:500;
+  box-shadow:0 0 20px rgba(200,184,150,0.15);
+}
+.btn.assign-cta:hover{
+  background:rgba(200,184,150,0.15);
+  box-shadow:0 0 30px rgba(200,184,150,0.25);
+  transform:translateY(-1px);
+}
 
 /* ── SECTIONS ── */
 .section-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.6rem;letter-spacing:0.06em;margin-bottom:4px;}
@@ -189,8 +298,6 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Inter',sans-ser
 #main{scrollbar-width:thin;scrollbar-color:#2a2a2a transparent;}
 
 /* ── RESPONSIVE ── */
-/* ── RESPONSIVE ── */
-
 /* Tablette (< 768px) */
 @media(max-width:768px){
   #game{max-width:100%;}
@@ -294,6 +401,10 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Inter',sans-ser
   /* Crime stats — plus compact */
   .crime-stats{flex-wrap:wrap;gap:8px;}
   .pip{width:7px;height:7px;}
+  
+  /* Crime header — ajuster pour mobile */
+  .crime-header{flex-direction:column;align-items:flex-start;gap:6px;}
+  .crime-reward{margin-top:2px;}
 
   /* Modal */
   #overlay{padding:12px;}
@@ -340,6 +451,25 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Inter',sans-ser
 </head>
 <body>
 
+<!-- START SCREEN -->
+<div id="start-screen">
+  <div class="start-title">Détectives Inc.</div>
+  <div class="start-subtitle">Agence d'Enquêtes Privées</div>
+  <div class="start-desc">
+    Paris, années 1920. Dirigez votre agence de détectives, résolvez des affaires mystérieuses, 
+    gérez vos enquêteurs et maintenez votre réputation dans une ville où réalité et fantastique se mêlent.
+  </div>
+  <button class="btn-start" onclick="startGame()">Commencer à Jouer</button>
+  <div style="margin-top:24px;">
+    <a href="https://maisonparadoxe.github.io/" target="_blank" rel="noopener"
+       style="font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:1px;transition:color 200ms ease,border-color 200ms ease;"
+       onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent-dim)'"
+       onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='var(--border)'">
+      Maison Paradoxe ↗
+    </a>
+  </div>
+</div>
+
 <div id="game">
   <div id="topbar">
     <div style="display:flex;flex-direction:column;gap:3px;">
@@ -364,7 +494,7 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Inter',sans-ser
         </div>
       </div>
       <div class="stat">
-        <span class="t-label">Enquêteurs</span>
+        <span class="t-label">Disponibles</span>
         <span class="stat-val" id="ui-dets">—</span>
       </div>
       <span class="day-badge" id="ui-day">Jour —</span>
@@ -398,6 +528,14 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Inter',sans-ser
 
 <script>
 /* ══════════════════════════════════════════════
+   START SCREEN
+══════════════════════════════════════════════ */
+function startGame() {
+  document.getElementById('start-screen').classList.add('hidden');
+  initGame();
+}
+
+/* ══════════════════════════════════════════════
    DONNÉES
 ══════════════════════════════════════════════ */
 const ALL_CRIMES = [
@@ -414,14 +552,39 @@ const ALL_CRIMES = [
 ];
 
 const ALL_DETECTIVES = [
-  { id:1, nom:"Éloi Vesper", age:35, action:2, reflexion:5, danger:1, salaire:100, corrompu:false, malade:false, traits:["Perspicace","Fragile"], bio:"Ancien archiviste reconverti. Lit les scènes de crime comme des textes anciens." },
-  { id:2, nom:"Céleste Noir", age:29, action:4, reflexion:3, danger:2, salaire:110, corrompu:true, malade:false, traits:["Redoutable","Corrompue"], bio:"Ancienne policière renvoyée. Efficace, mais ses loyautés sont en vente." },
-  { id:3, nom:"Auguste Flamel", age:52, action:3, reflexion:3, danger:3, salaire:130, corrompu:false, malade:false, traits:["Équilibré","Expérimenté"], bio:"Trente ans de terrain. Rien ne le surprend vraiment." },
-  { id:4, nom:"Margot Sérane", age:26, action:5, reflexion:2, danger:2, salaire:90, corrompu:false, malade:false, traits:["Impétueuse","Rapide"], bio:"Ancienne championne d'athlétisme. S'ennuie vite, agit d'abord." },
-  { id:5, nom:"Théodore Vane", age:44, action:1, reflexion:4, danger:4, salaire:120, corrompu:false, malade:false, traits:["Téméraire","Intuitif"], bio:"Passé trouble dans les milieux souterrains. Connaît tout le monde, rien ne l'effraie." },
-  { id:6, nom:"Irma Duval", age:38, action:3, reflexion:4, danger:2, salaire:115, corrompu:false, malade:false, traits:["Méthodique","Discrète"], bio:"Ancienne journaliste d'investigation. Pose les bonnes questions." },
-  { id:7, nom:"Lucien Faux", age:31, action:4, reflexion:2, danger:3, salaire:95, corrompu:true, malade:false, traits:["Efficace","Corrompu"], bio:"Les résultats sont là. Mais il garde toujours quelque chose pour lui." },
-  { id:8, nom:"Octave Brun", age:61, action:1, reflexion:5, danger:1, salaire:105, corrompu:false, malade:true, traits:["Brillant","Fragile","Malade"], bio:"Le meilleur analyste de la ville. Sa santé ne tient qu'à un fil." },
+  { id:1, nom:"Éloi Vesper", age:35, action:2, reflexion:5, danger:1, salaire:100, corrompu:false, malade:false, traits:[
+    {nom:"Perspicace", effet:"reflexion", bonus:5, tooltip:"+5% sur crimes de Réflexion", type:"positive"},
+    {nom:"Fragile", effet:"danger_malus", malus:5, tooltip:"-5% sur crimes Dangereux", type:"negative"}
+  ], bio:"Ancien archiviste reconverti. Lit les scènes de crime comme des textes anciens." },
+  { id:2, nom:"Céleste Noir", age:29, action:4, reflexion:3, danger:2, salaire:110, corrompu:true, malade:false, traits:[
+    {nom:"Redoutable", effet:"action", bonus:5, tooltip:"+5% sur crimes d'Action", type:"positive"},
+    {nom:"Corrompue", effet:"corrupt", tooltip:"Prélève 20% des gains", type:"corrupt"}
+  ], bio:"Ancienne policière renvoyée. Efficace, mais ses loyautés sont en vente." },
+  { id:3, nom:"Auguste Flamel", age:52, action:3, reflexion:3, danger:3, salaire:130, corrompu:false, malade:false, traits:[
+    {nom:"Équilibré", effet:"all", bonus:3, tooltip:"+3% sur tous les crimes", type:"positive"},
+    {nom:"Expérimenté", effet:"rep_protect", tooltip:"Réduit les pertes de réputation de moitié", type:"positive"}
+  ], bio:"Trente ans de terrain. Rien ne le surprend vraiment." },
+  { id:4, nom:"Margot Sérane", age:26, action:5, reflexion:2, danger:2, salaire:90, corrompu:false, malade:false, traits:[
+    {nom:"Impétueuse", effet:"action", bonus:5, tooltip:"+5% sur crimes d'Action", type:"positive"},
+    {nom:"Rapide", effet:"speed", tooltip:"Narratif - agit vite", type:"neutral"}
+  ], bio:"Ancienne championne d'athlétisme. S'ennuie vite, agit d'abord." },
+  { id:5, nom:"Théodore Vane", age:44, action:1, reflexion:4, danger:4, salaire:120, corrompu:false, malade:false, traits:[
+    {nom:"Téméraire", effet:"danger", bonus:5, tooltip:"+5% sur crimes Dangereux", type:"positive"},
+    {nom:"Intuitif", effet:"intuition", tooltip:"Narratif - flair naturel", type:"neutral"}
+  ], bio:"Passé trouble dans les milieux souterrains. Connaît tout le monde, rien ne l'effraie." },
+  { id:6, nom:"Irma Duval", age:38, action:3, reflexion:4, danger:2, salaire:115, corrompu:false, malade:false, traits:[
+    {nom:"Méthodique", effet:"reflexion", bonus:5, tooltip:"+5% sur crimes de Réflexion", type:"positive"},
+    {nom:"Discrète", effet:"discretion", tooltip:"Narratif - passe inaperçue", type:"neutral"}
+  ], bio:"Ancienne journaliste d'investigation. Pose les bonnes questions." },
+  { id:7, nom:"Lucien Faux", age:31, action:4, reflexion:2, danger:3, salaire:95, corrompu:true, malade:false, traits:[
+    {nom:"Efficace", effet:"action", bonus:5, tooltip:"+5% sur crimes d'Action", type:"positive"},
+    {nom:"Corrompu", effet:"corrupt", tooltip:"Prélève 20% des gains", type:"corrupt"}
+  ], bio:"Les résultats sont là. Mais il garde toujours quelque chose pour lui." },
+  { id:8, nom:"Octave Brun", age:61, action:1, reflexion:5, danger:1, salaire:105, corrompu:false, malade:true, traits:[
+    {nom:"Brillant", effet:"reflexion", bonus:5, tooltip:"+5% sur crimes de Réflexion", type:"positive"},
+    {nom:"Fragile", effet:"injury_risk", tooltip:"Plus de risques de blessure", type:"negative"},
+    {nom:"Malade", effet:"sick", tooltip:"-1 Action permanent", type:"sick"}
+  ], bio:"Le meilleur analyste de la ville. Sa santé ne tient qu'à un fil." },
 ];
 
 const ALL_BONUS = [
@@ -447,10 +610,22 @@ const EVENTS = [
 ];
 
 const HIRE_CANDIDATES = [
-  { id:10, nom:"Bastien Crue", age:24, action:3, reflexion:2, danger:3, salaire:80, corrompu:false, malade:false, traits:["Novice","Courageux"], bio:"Tout juste sorti de l'académie. Motivé, inexpérimenté.", cout:150 },
-  { id:11, nom:"Simone Ader", age:41, action:2, reflexion:5, danger:2, salaire:125, corrompu:false, malade:false, traits:["Experte","Chère"], bio:"Spécialiste des affaires complexes. Prix en conséquence.", cout:300 },
-  { id:12, nom:"Jules Marchand", age:34, action:4, reflexion:3, danger:1, salaire:100, corrompu:false, malade:false, traits:["Action","Équilibré"], bio:"Ancien boxeur reconverti. Préfère les résultats directs.", cout:200 },
-  { id:13, nom:"Nora Stein", age:38, action:2, reflexion:4, danger:4, salaire:115, corrompu:false, malade:false, traits:["Téméraire","Analytique"], bio:"Passée par plusieurs agences. Sait gérer le risque.", cout:250 },
+  { id:10, nom:"Bastien Crue", age:24, action:3, reflexion:2, danger:3, salaire:80, corrompu:false, malade:false, traits:[
+    {nom:"Novice", effet:"novice", tooltip:"Narratif - débutant", type:"neutral"},
+    {nom:"Courageux", effet:"danger", bonus:3, tooltip:"+3% sur crimes Dangereux", type:"positive"}
+  ], bio:"Tout juste sorti de l'académie. Motivé, inexpérimenté.", cout:150 },
+  { id:11, nom:"Simone Ader", age:41, action:2, reflexion:5, danger:2, salaire:125, corrompu:false, malade:false, traits:[
+    {nom:"Experte", effet:"reflexion", bonus:5, tooltip:"+5% sur crimes de Réflexion", type:"positive"},
+    {nom:"Chère", effet:"expensive", tooltip:"Salaire élevé", type:"neutral"}
+  ], bio:"Spécialiste des affaires complexes. Prix en conséquence.", cout:300 },
+  { id:12, nom:"Jules Marchand", age:34, action:4, reflexion:3, danger:1, salaire:100, corrompu:false, malade:false, traits:[
+    {nom:"Action", effet:"action", bonus:5, tooltip:"+5% sur crimes d'Action", type:"positive"},
+    {nom:"Équilibré", effet:"all", bonus:2, tooltip:"+2% sur tous les crimes", type:"positive"}
+  ], bio:"Ancien boxeur reconverti. Préfère les résultats directs.", cout:200 },
+  { id:13, nom:"Nora Stein", age:38, action:2, reflexion:4, danger:4, salaire:115, corrompu:false, malade:false, traits:[
+    {nom:"Téméraire", effet:"danger", bonus:5, tooltip:"+5% sur crimes Dangereux", type:"positive"},
+    {nom:"Analytique", effet:"reflexion", bonus:3, tooltip:"+3% sur crimes de Réflexion", type:"positive"}
+  ], bio:"Passée par plusieurs agences. Sait gérer le risque.", cout:250 },
 ];
 
 /* ══════════════════════════════════════════════
@@ -591,11 +766,24 @@ function resolveAll() {
     } else {
       money = -50;
       repDelta = bonus && bonus.protectRep ? 0 : -8;
-      if (G.reputation < 30) repDelta = -4; // bad rep attire moins d'attention
+      
+      // Check for "Expérimenté" trait (rep_protect)
+      const hasRepProtect = det.traits && det.traits.some(t => t.effet === 'rep_protect');
+      if (hasRepProtect && repDelta < 0) {
+        repDelta = Math.floor(repDelta / 2);
+        addLog(`${det.nom} limite les dégâts de réputation grâce à son expérience.`, 'system');
+      }
+      
+      if (G.reputation < 30) repDelta = Math.max(repDelta, -4); // bad rep attire moins d'attention
       G.money = Math.max(0, G.money + money);
       G.reputation = Math.max(0, G.reputation + repDelta);
+      
       // Random: detective hurt on high danger
-      if (crime.danger >= 4 && Math.random() < 0.3 && !(bonus && bonus.protectDet)) {
+      let injuryChance = 0.3;
+      const hasInjuryRisk = det.traits && det.traits.some(t => t.effet === 'injury_risk');
+      if (hasInjuryRisk) injuryChance = 0.5; // Fragile detectives get hurt more easily
+      
+      if (crime.danger >= 4 && Math.random() < injuryChance && !(bonus && bonus.protectDet)) {
         det.indisponible = 2;
         addLog(`${det.nom} blessé(e) — indisponible 2 jours.`, 'failure');
       }
@@ -616,7 +804,24 @@ function computeChance(crime, det, bonus) {
   const difficulty = crime.type === 'action' ? crime.action : crime.type === 'reflexion' ? crime.reflexion : crime.danger;
   let chance = 30 + (mainStat / difficulty) * 50;
 
-  // Bonus
+  // Apply detective trait bonuses
+  if (det.traits && Array.isArray(det.traits)) {
+    det.traits.forEach(trait => {
+      if (trait.bonus) {
+        // Type-specific bonuses
+        if (trait.effet === 'action' && crime.type === 'action') chance += trait.bonus;
+        else if (trait.effet === 'reflexion' && crime.type === 'reflexion') chance += trait.bonus;
+        else if (trait.effet === 'danger' && crime.type === 'danger') chance += trait.bonus;
+        else if (trait.effet === 'all') chance += trait.bonus;
+      }
+      if (trait.malus) {
+        // Type-specific maluses
+        if (trait.effet === 'danger_malus' && crime.type === 'danger') chance -= trait.malus;
+      }
+    });
+  }
+
+  // Bonus card
   if (bonus) {
     if (bonus.aleatoire) { chance += (Math.random() > 0.5 ? 20 : -15); }
     else if (bonus.type && bonus.type === crime.tag.toLowerCase()) { chance += bonus.bonus; }
@@ -731,10 +936,17 @@ function renderAssign() {
     let cls = unavail ? 'unavailable' : '';
     if (G.selectedDet && G.selectedDet.id === d.id) cls = 'selected';
     if (d.corrompu) cls += ' corrupt';
+    
+    // Render traits with tooltips
+    const traitsHtml = d.traits.map(t => {
+      const traitClass = t.type === 'corrupt' ? 'corrupt' : t.type === 'sick' ? 'sick' : t.type === 'positive' ? 'positive' : '';
+      return `<span class="trait ${traitClass}" data-tooltip="${t.tooltip}">${t.nom}</span>`;
+    }).join('');
+    
     html += `<div class="detective-card ${cls}" style="animation-delay:${i*50}ms" onclick="selectDet(${d.id})">
       <div class="det-header"><span class="det-name t-heading">${d.nom}</span><span class="det-age">${d.age} ans</span></div>
       ${renderStatPips(d)}
-      <div class="det-traits">${d.traits.map(t=>`<span class="trait ${t==='Corrompue'||t==='Corrompu'?'corrupt':t==='Malade'||t==='Fragile'?'sick':''}">${t}</span>`).join('')}</div>
+      <div class="det-traits">${traitsHtml}</div>
       <div class="salary-label t-label" style="margin-top:8px;">${d.salaire}€/jour</div>
       ${unavail && d.indisponible>0?`<div class="det-status unavail">Indisponible — ${d.indisponible}j</div>`:''}
     </div>`;
@@ -752,9 +964,9 @@ function renderAssign() {
   });
   html += `</div>`;
 
-  // Assign button
+  // Assign button - MORE VISIBLE
   if (G.selectedCrime && G.selectedDet) {
-    html += `<div style="margin-bottom:12px;"><button class="btn primary" onclick="assignSelected()">Assigner ${G.selectedDet.nom} → ${G.selectedCrime.titre}</button></div>`;
+    html += `<div style="margin-bottom:20px;text-align:center;"><button class="btn assign-cta" onclick="assignSelected()">→ Assigner ${G.selectedDet.nom} à "${G.selectedCrime.titre}" ←</button></div>`;
   }
 
   main.innerHTML = html;
@@ -915,6 +1127,11 @@ function openHireModal() {
   const alreadyHiredIds = new Set(G.detectives.map(d=>d.id));
 
   HIRE_CANDIDATES.filter(c=>!alreadyHiredIds.has(c.id)).forEach(c => {
+    const traitsHtml = c.traits.map(t => {
+      const traitClass = t.type === 'corrupt' ? 'corrupt' : t.type === 'sick' ? 'sick' : t.type === 'positive' ? 'positive' : '';
+      return `<span class="trait ${traitClass}" data-tooltip="${t.tooltip}">${t.nom}</span>`;
+    }).join('');
+    
     html += `<div class="hire-option" onclick="hireDetective(${c.id})">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
         <span class="t-heading" style="font-size:1rem;">${c.nom}</span>
@@ -922,7 +1139,7 @@ function openHireModal() {
       </div>
       <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:8px;">${c.bio}</div>
       ${renderStatPips(c)}
-      <div class="det-traits" style="margin-top:8px;">${c.traits.map(t=>`<span class="trait">${t}</span>`).join('')}</div>
+      <div class="det-traits" style="margin-top:8px;">${traitsHtml}</div>
       <div class="salary-label t-label" style="margin-top:8px;">${c.salaire}€/jour</div>
     </div>`;
   });
@@ -1021,7 +1238,8 @@ function updateUI() {
   document.getElementById('ui-rep').className = `stat-val ${G.reputation>60?'good':G.reputation>30?'':' danger'}`;
   document.getElementById('ui-rep-bar').style.width = G.reputation+'%';
   const avail = G.detectives.filter(d=>d.indisponible===0).length;
-  document.getElementById('ui-dets').textContent = `${avail}/${G.detectives.length}`;
+  const total = G.detectives.length;
+  document.getElementById('ui-dets').textContent = `${avail} / ${total}`;
   document.getElementById('ui-day').textContent = `Jour ${G.day}`;
 }
 
@@ -1052,11 +1270,6 @@ function gameOver(reason) {
 document.getElementById('overlay').addEventListener('click', function(e){
   if(e.target === this) closeModal();
 });
-
-/* ══════════════════════════════════════════════
-   INIT
-══════════════════════════════════════════════ */
-initGame();
 </script>
 </body>
 </html>
