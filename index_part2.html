@@ -1,0 +1,90 @@
+
+const EVENTS = [
+  { id:1, titre:"Grève des policiers", desc:"Les forces de l'ordre sont inopérantes. Les crimes de type Danger sont plus risqués aujourd'hui.", effet:"danger+1" },
+  { id:2, titre:"Presse favorable", desc:"Un article vous présente sous un jour flatteur. Bonus de réputation.", effet:"rep+5" },
+  { id:3, titre:"Pluie torrentielle", desc:"Les déplacements sont difficiles. Taux de succès réduit de 10% pour tous.", effet:"global-10" },
+  { id:4, titre:"Client mystérieux", desc:"Un inconnu laisse une enveloppe contenant 200€ et aucune explication.", effet:"money+200" },
+  { id:5, titre:"Inspection des Mœurs", desc:"Des agents scrutent vos activités. Un enquêteur corrompu est suspendu ce jour.", effet:"suspend-corrupt" },
+  { id:6, titre:"Nuit de brouillard", desc:"La ville est paralysée. Un crime supplémentaire aléatoire s'ajoute au plateau.", effet:"extra-crime" },
+  { id:7, titre:"Rumeurs de couloirs", desc:"On parle de votre agence en mauvais termes. -5 réputation.", effet:"rep-5" },
+  { id:8, titre:"Calme plat", desc:"Rien de particulier aujourd'hui. Journée normale.", effet:"none" },
+];
+
+const HIRE_CANDIDATES = [
+  { id:10, nom:"Bastien Crue", age:24, action:3, reflexion:2, danger:3, salaire:80, corrompu:false, malade:false, traits:[
+    {nom:"Novice", effet:"novice", tooltip:"Narratif - débutant", type:"neutral"},
+    {nom:"Courageux", effet:"danger", bonus:3, tooltip:"+3% sur crimes Dangereux", type:"positive"}
+  ], bio:"Tout juste sorti de l'académie. Motivé, inexpérimenté.", cout:150 },
+  { id:11, nom:"Simone Ader", age:41, action:2, reflexion:5, danger:2, salaire:125, corrompu:false, malade:false, traits:[
+    {nom:"Experte", effet:"reflexion", bonus:5, tooltip:"+5% sur crimes de Réflexion", type:"positive"},
+    {nom:"Chère", effet:"expensive", tooltip:"Salaire élevé", type:"neutral"}
+  ], bio:"Spécialiste des affaires complexes. Prix en conséquence.", cout:300 },
+  { id:12, nom:"Jules Marchand", age:34, action:4, reflexion:3, danger:1, salaire:100, corrompu:false, malade:false, traits:[
+    {nom:"Action", effet:"action", bonus:5, tooltip:"+5% sur crimes d'Action", type:"positive"},
+    {nom:"Équilibré", effet:"all", bonus:2, tooltip:"+2% sur tous les crimes", type:"positive"}
+  ], bio:"Ancien boxeur reconverti. Préfère les résultats directs.", cout:200 },
+  { id:13, nom:"Nora Stein", age:38, action:2, reflexion:4, danger:4, salaire:115, corrompu:false, malade:false, traits:[
+    {nom:"Téméraire", effet:"danger", bonus:5, tooltip:"+5% sur crimes Dangereux", type:"positive"},
+    {nom:"Analytique", effet:"reflexion", bonus:3, tooltip:"+3% sur crimes de Réflexion", type:"positive"}
+  ], bio:"Passée par plusieurs agences. Sait gérer le risque.", cout:250 },
+];
+
+/* ══════════════════════════════════════════════
+   ÉTAT
+══════════════════════════════════════════════ */
+let G = {};
+
+function initGame() {
+  document.getElementById('gameover').classList.remove('active');
+  G = {
+    day: 1,
+    money: 800,
+    reputation: 50,
+    detectives: [
+      {...ALL_DETECTIVES[0], indisponible:0},
+      {...ALL_DETECTIVES[2], indisponible:0},
+      {...ALL_DETECTIVES[3], indisponible:0},
+    ],
+    crimes: [],
+    bonusCards: [],
+    assignments: {},   // crimeId -> { detId, bonusId }
+    phase: 'morning',  // morning | assign | resolve | evening
+    event: null,
+    results: [],
+    totalDays: 0,
+    totalResolved: 0,
+    globalModifier: 0,
+    dangerModifier: 0,
+    selectedCrime: null,
+    selectedDet: null,
+    selectedBonus: null,
+  };
+  startMorning();
+}
+
+/* ══════════════════════════════════════════════
+   PHASES
+══════════════════════════════════════════════ */
+function startMorning() {
+  G.phase = 'morning';
+  G.selectedCrime = null;
+  G.selectedDet = null;
+  G.selectedBonus = null;
+  G.assignments = {};
+  G.globalModifier = 0;
+  G.dangerModifier = 0;
+  G.results = [];
+
+  // Pick event
+  G.event = EVENTS[Math.floor(Math.random() * EVENTS.length)];
+  applyEventStart(G.event);
+
+  // Pick 3 crimes
+  const pool = [...ALL_CRIMES].sort(() => Math.random()-0.5);
+  G.crimes = pool.slice(0,3);
+  if (G.event.effet === 'extra-crime') {
+    G.crimes.push(pool[3]);
+  }
+
+  // Pick 2 bonus cards
+  const bpool = [...ALL_BONUS].sort(() => Math.random()-0.5);

@@ -1,61 +1,138 @@
-# Détectives Inc.
+# Détectives Inc. - Structure du projet
 
-Un jeu de gestion narrative dans un Paris des années 1930, entre polar et réalisme magique.  
-Développé par **Maison Paradoxe**.
+## 📁 Structure des fichiers
 
----
+```
+detective-inc/
+├── index.html          # Page principale du jeu
+├── style.css           # Tous les styles CSS
+├── game.js             # Logique du jeu + chargement JSON
+└── data/               # Données du jeu (JSON)
+    ├── crimes.json     # Toutes les enquêtes (10 actuellement)
+    ├── detectives.json # Tous les détectives (8 actuellement)
+    ├── bonus.json      # Cartes bonus (8 actuellement)
+    ├── events.json     # Événements quotidiens (8 actuellement)
+    └── hire.json       # Candidats à recruter (4 actuellement)
+```
 
-## L'Agence
+## 🚀 Déploiement sur GitHub Pages
 
-Vous dirigez *Détectives Inc.*, une agence spécialisée dans les affaires que personne d'autre n'ose toucher. Vols impossibles, meurtres sans mobile, disparitions inexpliquées — et parfois, des cas qui dépassent l'entendement. Chaque jour, de nouvelles affaires arrivent. À vous de décider lesquelles méritent votre attention, et qui vous envoyez sur le terrain.
+1. **Créer un nouveau dépôt** (ou utiliser l'existant)
+2. **Upload tous les fichiers** en respectant la structure
+3. **Activer GitHub Pages** dans Settings → Pages → Source: main branch
+4. **C'est prêt !** Le jeu sera accessible à `https://[username].github.io/[repo]/`
 
----
+## ✏️ Ajouter du contenu
 
-## Comment ça se joue
+### Ajouter une nouvelle enquête
 
-La journée se déroule en quatre temps.
+Éditez `data/crimes.json` et ajoutez :
 
-**Le matin**, trois affaires atterrissent sur votre bureau. Vous prenez connaissance des suspects, des lieux, des enjeux. Un événement vient perturber la ville — grève des policiers, presse hostile, nuit de brouillard — et deux cartes bonus sont disponibles pour aider vos enquêteurs.
+```json
+{
+  "id": 11,
+  "titre": "Le Vol du Manuscrit",
+  "type": "reflexion",
+  "desc": "Un manuscrit rare a disparu de la Bibliothèque Nationale.",
+  "action": 2,
+  "reflexion": 4,
+  "danger": 1,
+  "recompense": 350,
+  "temps": 1,
+  "tag": "Réaliste",
+  "histoire": "Les portes étaient fermées, mais une fenêtre était entrouverte.",
+  "fins": {
+    "succes": "Le manuscrit est retrouvé chez un collectionneur privé.",
+    "echec": "Le manuscrit est perdu à jamais."
+  }
+}
+```
 
-**Lors de l'assignation**, vous choisissez quel enquêteur envoyer sur quelle affaire. Chaque crime a un profil dominant — Action, Réflexion ou Danger — et chaque enquêteur a ses forces et ses faiblesses. Mal assortis, les chances de succès chutent. Une carte bonus bien placée peut faire la différence.
+### Ajouter un nouveau détective
 
-**La résolution** est automatique mais jamais garantie. Le succès dépend des compétences, de l'événement du jour, de votre réputation dans la ville, et d'une part d'aléatoire incompressible. Chaque affaire résolue ou échouée se conclut par un récit court.
+Éditez `data/detectives.json` :
 
-**Le soir**, les salaires sont versés, le loyer prélevé. Vous faites le bilan. Puis tout recommence.
+```json
+{
+  "id": 9,
+  "nom": "Sophie Mercier",
+  "age": 33,
+  "action": 3,
+  "reflexion": 4,
+  "danger": 2,
+  "salaire": 110,
+  "corrompu": false,
+  "malade": false,
+  "traits": [
+    {
+      "nom": "Intuitive",
+      "effet": "reflexion",
+      "bonus": 5,
+      "tooltip": "+5% sur crimes de Réflexion",
+      "type": "positive"
+    }
+  ],
+  "bio": "Ancienne profileuse. Comprend les motivations cachées."
+}
+```
 
----
+### Ajouter un événement
 
-## Les Enquêteurs
+Éditez `data/events.json` :
 
-Vous débutez avec trois détectives aux profils contrastés. D'autres peuvent être recrutés en cours de partie, moyennant un investissement.
+```json
+{
+  "id": 9,
+  "titre": "Épidémie de grippe",
+  "desc": "Une grippe sévit dans la ville. Un détective aléatoire tombe malade.",
+  "effet": "random-sick"
+}
+```
 
-Chaque enquêteur a une personnalité et des traits qui influencent le jeu. Certains sont corrompus — ils résolvent les affaires, mais gardent une part des honoraires. D'autres sont malades, ou fragiles sous pression. Ils vieillissent avec le temps, et leur profil évolue en conséquence.
+## 🎯 Avantages de cette structure
 
-Un enquêteur blessé sur une affaire dangereuse est indisponible plusieurs jours. Le perdre au mauvais moment peut déséquilibrer toute la semaine.
+✅ **Facile à éditer** - Les données sont en JSON lisible
+✅ **Scalable** - Ajoutez 100+ crimes sans ralentir le jeu
+✅ **Modulaire** - Changez les données sans toucher au code
+✅ **Gratuit** - Hébergement 100% gratuit sur GitHub Pages
+✅ **Collaboratif** - Facile de déléguer l'écriture de contenu
+✅ **Versionné** - Git track tous les changements
 
----
+## 🔧 Développement local
 
-## Ce qui met fin à la partie
+Pour tester localement, vous avez besoin d'un serveur web (à cause de fetch() sur les JSON).
 
-L'agence ferme ses portes si vous n'avez plus d'argent pour payer vos enquêteurs, ou si votre réputation dans la ville tombe à zéro. Les affaires ignorées, les échecs répétés et les mauvaises décisions de recrutement s'accumulent. Il n'y a pas de sauvegarde — chaque partie repart de zéro.
+**Option 1 : Python**
+```bash
+cd detective-inc
+python -m http.server 8000
+# Ouvrir http://localhost:8000
+```
 
----
+**Option 2 : Node.js**
+```bash
+npm install -g http-server
+cd detective-inc
+http-server
+```
 
-## Ambiance
+**Option 3 : VS Code**
+Installez l'extension "Live Server" et clic-droit → "Open with Live Server"
 
-*Détectives Inc.* emprunte au film noir, au polar des années 1930 et au fantastique discret. Les affaires mêlent crimes réalistes et cas occultes — un peintre dont les toiles prédisent l'avenir, une montre qui tue ses propriétaires, un enfant sorti des catacombes. Rien n'est jamais tout à fait ordinaire.
+## 📊 Statistiques actuelles
 
----
+- **10 enquêtes** (5 Réalistes, 5 Fantastiques)
+- **8 détectives** (dont 2 corrompus, 1 malade)
+- **8 cartes bonus**
+- **8 événements**
+- **4 candidats recrutables**
 
-## Jouer
+**Potentiel de croissance :** Facile d'atteindre 100+ enquêtes !
 
-Ouvrez `index.html` dans un navigateur. Aucune installation, aucune dépendance.
+## 🎨 Personnalisation
 
----
+- **Styles** → `style.css`
+- **Logique** → `game.js`
+- **Contenu** → `data/*.json`
 
-## Maison Paradoxe
-
-*Maison d'expériences narratives interactives.*  
-Nous concevons des enquêtes, des mystères et des récits à résoudre.
-
-&copy; 2026 Maison Paradoxe
+Séparation claire = maintenance facile !
