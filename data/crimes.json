@@ -1,0 +1,172 @@
+[
+  {
+    "id": 1,
+    "titre": "Vol du Diamant Bleu",
+    "type": "action",
+    "desc": "Un diamant d'exception a disparu d'un hôtel du IIIe arrondissement. Le directeur veut discrétion absolue.",
+    "action": 4,
+    "reflexion": 1,
+    "danger": 2,
+    "recompense": 300,
+    "temps": 1,
+    "tag": "Réaliste",
+    "histoire": "La chambre forte était déverrouillée de l'intérieur. Le personnel de nuit se contredit.",
+    "fins": {
+      "succes": "Le diamant est retrouvé dans la doublure du manteau du groom. L'affaire est réglée sans bruit.",
+      "echec": "Le diamant disparaît dans les bas-fonds. Votre réputation en prend un coup."
+    }
+  },
+  {
+    "id": 2,
+    "titre": "Meurtre à l'Opéra",
+    "type": "reflexion",
+    "desc": "Le baryton principal a été retrouvé mort dans sa loge. Plusieurs suspects, aucun mobile apparent.",
+    "action": 1,
+    "reflexion": 5,
+    "danger": 2,
+    "recompense": 500,
+    "temps": 1,
+    "tag": "Réaliste",
+    "histoire": "Une lettre anonyme avait averti la victime trois jours avant. Personne ne l'avait prise au sérieux.",
+    "fins": {
+      "succes": "La femme du baryton est confondue. La presse salue votre perspicacité.",
+      "echec": "Le meurtrier s'échappe. La ville bruisse de vos échecs."
+    }
+  },
+  {
+    "id": 3,
+    "titre": "Chantage Politique",
+    "type": "danger",
+    "desc": "Un sénateur reçoit des menaces. Il refuse de contacter la police. Affaire ultra-sensible.",
+    "action": 2,
+    "reflexion": 3,
+    "danger": 4,
+    "recompense": 450,
+    "temps": 1,
+    "tag": "Réaliste",
+    "histoire": "Les lettres de chantage contiennent des informations que seul l'entourage immédiat pouvait connaître.",
+    "fins": {
+      "succes": "Le maître chanteur est neutralisé. Le sénateur vous envoie une enveloppe non tracée.",
+      "echec": "Le scandale éclate. Le sénateur vous accuse publiquement de négligence."
+    }
+  },
+  {
+    "id": 4,
+    "titre": "Disparition du Journaliste",
+    "type": "reflexion",
+    "desc": "Un reporter enquêtant sur des trafics portuaires a disparu. Sa rédaction préfère la discrétion.",
+    "action": 2,
+    "reflexion": 4,
+    "danger": 3,
+    "recompense": 400,
+    "temps": 1,
+    "tag": "Réaliste",
+    "histoire": "Son dernier article mentionnait une connexion entre le port et une famille noble. Ses notes ont été volées.",
+    "fins": {
+      "succes": "Le journaliste est retrouvé vivant dans un entrepôt du 12e. L'histoire fait la une.",
+      "echec": "Aucune trace. La rédaction coupe tout contact avec votre agence."
+    }
+  },
+  {
+    "id": 5,
+    "titre": "L'Héritière Fantôme",
+    "type": "action",
+    "desc": "Une jeune héritière prétend voir sa défunte mère dans les couloirs de son manoir. La famille veut des réponses.",
+    "action": 3,
+    "reflexion": 2,
+    "danger": 1,
+    "recompense": 250,
+    "temps": 1,
+    "tag": "Réaliste",
+    "histoire": "Des objets bougent la nuit. La cuisinière a démissionné sans explication.",
+    "fins": {
+      "succes": "Il s'agissait d'un cousin cupide qui simulait les apparitions pour terroriser l'héritière.",
+      "echec": "L'héritière quitte le manoir. Le mystère demeure entier."
+    }
+  },
+  {
+    "id": 6,
+    "titre": "Le Pacte du Peintre Maudit",
+    "type": "danger",
+    "desc": "Un peintre célèbre prétend avoir signé un contrat avec une entité. Ses toiles montrent des scènes non encore advenues.",
+    "action": 1,
+    "reflexion": 3,
+    "danger": 5,
+    "recompense": 600,
+    "temps": 1,
+    "tag": "Fantastique",
+    "histoire": "Trois scènes peintes se sont réalisées à l'identique. La quatrième toile représente votre agence en flammes.",
+    "fins": {
+      "succes": "La manipulation est déjouée. Le peintre était instrumentalisé par un réseau occulte.",
+      "echec": "La quatrième toile se réalise. Vous perdez du matériel et un enquêteur est hospitalisé."
+    }
+  },
+  {
+    "id": 7,
+    "titre": "La Malédiction de la Montre",
+    "type": "reflexion",
+    "desc": "Trois propriétaires successifs de la même montre de gousset sont morts dans des circonstances identiques.",
+    "action": 1,
+    "reflexion": 5,
+    "danger": 3,
+    "recompense": 550,
+    "temps": 1,
+    "tag": "Fantastique",
+    "histoire": "La montre indique toujours 3h17, quelle que soit l'heure. Le dernier propriétaire est mort à 3h17.",
+    "fins": {
+      "succes": "La montre dissimulait un mécanisme libérant un poison de contact. Affaire résolue.",
+      "echec": "La malédiction continue. Votre enquêteur présente des symptômes inexpliqués."
+    }
+  },
+  {
+    "id": 8,
+    "titre": "Le Cabaret des Ombres",
+    "type": "action",
+    "desc": "Des clients du cabaret Théodore signalent des heures perdues. Aucun souvenir entre minuit et l'aube.",
+    "action": 4,
+    "reflexion": 2,
+    "danger": 3,
+    "recompense": 380,
+    "temps": 1,
+    "tag": "Fantastique",
+    "histoire": "Les employés du cabaret ne présentent aucune anomalie. Seuls les clients sont affectés.",
+    "fins": {
+      "succes": "Une substance hallucinogène était diffusée via la ventilation. Le gérant arrêté.",
+      "echec": "L'enquêteur perd lui aussi plusieurs heures. L'affaire reste ouverte."
+    }
+  },
+  {
+    "id": 9,
+    "titre": "Vol dans les Archives",
+    "type": "reflexion",
+    "desc": "Des dossiers sensibles ont disparu de la préfecture. Pas d'effraction visible.",
+    "action": 1,
+    "reflexion": 4,
+    "danger": 2,
+    "recompense": 350,
+    "temps": 1,
+    "tag": "Réaliste",
+    "histoire": "Les archives concernaient des affaires classées liées à une famille d'industriels.",
+    "fins": {
+      "succes": "Un fonctionnaire corrompu est confondu. La préfecture vous recommande discrètement.",
+      "echec": "Les dossiers ne réapparaissent pas. L'affaire est étouffée."
+    }
+  },
+  {
+    "id": 10,
+    "titre": "L'Enfant des Catacombes",
+    "type": "danger",
+    "desc": "Un enfant prétend venir des catacombes et ne parle qu'en ancien français. Il connaît des détails sur des meurtres non élucidés.",
+    "action": 2,
+    "reflexion": 4,
+    "danger": 4,
+    "recompense": 500,
+    "temps": 1,
+    "tag": "Fantastique",
+    "histoire": "L'enfant cite des noms qui n'apparaissent que dans des archives scellées. Il a disparu de l'hôpital sans laisser de trace.",
+    "fins": {
+      "succes": "Une organisation d'escrocs se servait de l'enfant comme leurre. Réseau démantelé.",
+      "echec": "L'enfant disparaît. Les meurtres évoqués reprennent."
+    }
+  }
+]

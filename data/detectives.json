@@ -1,0 +1,225 @@
+[
+  {
+    "id": 1,
+    "nom": "Éloi Vesper",
+    "age": 35,
+    "action": 2,
+    "reflexion": 5,
+    "danger": 1,
+    "salaire": 100,
+    "corrompu": false,
+    "malade": false,
+    "traits": [
+      {
+        "nom": "Perspicace",
+        "effet": "reflexion",
+        "bonus": 5,
+        "tooltip": "+5% sur crimes de Réflexion",
+        "type": "positive"
+      },
+      {
+        "nom": "Fragile",
+        "effet": "danger_malus",
+        "malus": 5,
+        "tooltip": "-5% sur crimes Dangereux",
+        "type": "negative"
+      }
+    ],
+    "bio": "Ancien archiviste reconverti. Lit les scènes de crime comme des textes anciens."
+  },
+  {
+    "id": 2,
+    "nom": "Céleste Noir",
+    "age": 29,
+    "action": 4,
+    "reflexion": 3,
+    "danger": 2,
+    "salaire": 110,
+    "corrompu": true,
+    "malade": false,
+    "traits": [
+      {
+        "nom": "Redoutable",
+        "effet": "action",
+        "bonus": 5,
+        "tooltip": "+5% sur crimes d'Action",
+        "type": "positive"
+      },
+      {
+        "nom": "Corrompue",
+        "effet": "corrupt",
+        "tooltip": "Prélève 20% des gains",
+        "type": "corrupt"
+      }
+    ],
+    "bio": "Ancienne policière renvoyée. Efficace, mais ses loyautés sont en vente."
+  },
+  {
+    "id": 3,
+    "nom": "Auguste Flamel",
+    "age": 52,
+    "action": 3,
+    "reflexion": 3,
+    "danger": 3,
+    "salaire": 130,
+    "corrompu": false,
+    "malade": false,
+    "traits": [
+      {
+        "nom": "Équilibré",
+        "effet": "all",
+        "bonus": 3,
+        "tooltip": "+3% sur tous les crimes",
+        "type": "positive"
+      },
+      {
+        "nom": "Expérimenté",
+        "effet": "rep_protect",
+        "tooltip": "Réduit les pertes de réputation de moitié",
+        "type": "positive"
+      }
+    ],
+    "bio": "Trente ans de terrain. Rien ne le surprend vraiment."
+  },
+  {
+    "id": 4,
+    "nom": "Margot Sérane",
+    "age": 26,
+    "action": 5,
+    "reflexion": 2,
+    "danger": 2,
+    "salaire": 90,
+    "corrompu": false,
+    "malade": false,
+    "traits": [
+      {
+        "nom": "Impétueuse",
+        "effet": "action",
+        "bonus": 5,
+        "tooltip": "+5% sur crimes d'Action",
+        "type": "positive"
+      },
+      {
+        "nom": "Rapide",
+        "effet": "speed",
+        "tooltip": "Narratif - agit vite",
+        "type": "neutral"
+      }
+    ],
+    "bio": "Ancienne championne d'athlétisme. S'ennuie vite, agit d'abord."
+  },
+  {
+    "id": 5,
+    "nom": "Théodore Vane",
+    "age": 44,
+    "action": 1,
+    "reflexion": 4,
+    "danger": 4,
+    "salaire": 120,
+    "corrompu": false,
+    "malade": false,
+    "traits": [
+      {
+        "nom": "Téméraire",
+        "effet": "danger",
+        "bonus": 5,
+        "tooltip": "+5% sur crimes Dangereux",
+        "type": "positive"
+      },
+      {
+        "nom": "Intuitif",
+        "effet": "intuition",
+        "tooltip": "Narratif - flair naturel",
+        "type": "neutral"
+      }
+    ],
+    "bio": "Passé trouble dans les milieux souterrains. Connaît tout le monde, rien ne l'effraie."
+  },
+  {
+    "id": 6,
+    "nom": "Irma Duval",
+    "age": 38,
+    "action": 3,
+    "reflexion": 4,
+    "danger": 2,
+    "salaire": 115,
+    "corrompu": false,
+    "malade": false,
+    "traits": [
+      {
+        "nom": "Méthodique",
+        "effet": "reflexion",
+        "bonus": 5,
+        "tooltip": "+5% sur crimes de Réflexion",
+        "type": "positive"
+      },
+      {
+        "nom": "Discrète",
+        "effet": "discretion",
+        "tooltip": "Narratif - passe inaperçue",
+        "type": "neutral"
+      }
+    ],
+    "bio": "Ancienne journaliste d'investigation. Pose les bonnes questions."
+  },
+  {
+    "id": 7,
+    "nom": "Lucien Faux",
+    "age": 31,
+    "action": 4,
+    "reflexion": 2,
+    "danger": 3,
+    "salaire": 95,
+    "corrompu": true,
+    "malade": false,
+    "traits": [
+      {
+        "nom": "Efficace",
+        "effet": "action",
+        "bonus": 5,
+        "tooltip": "+5% sur crimes d'Action",
+        "type": "positive"
+      },
+      {
+        "nom": "Corrompu",
+        "effet": "corrupt",
+        "tooltip": "Prélève 20% des gains",
+        "type": "corrupt"
+      }
+    ],
+    "bio": "Les résultats sont là. Mais il garde toujours quelque chose pour lui."
+  },
+  {
+    "id": 8,
+    "nom": "Octave Brun",
+    "age": 61,
+    "action": 1,
+    "reflexion": 5,
+    "danger": 1,
+    "salaire": 105,
+    "corrompu": false,
+    "malade": true,
+    "traits": [
+      {
+        "nom": "Brillant",
+        "effet": "reflexion",
+        "bonus": 5,
+        "tooltip": "+5% sur crimes de Réflexion",
+        "type": "positive"
+      },
+      {
+        "nom": "Fragile",
+        "effet": "injury_risk",
+        "tooltip": "Plus de risques de blessure",
+        "type": "negative"
+      },
+      {
+        "nom": "Malade",
+        "effet": "sick",
+        "tooltip": "-1 Action permanent",
+        "type": "sick"
+      }
+    ],
+    "bio": "Le meilleur analyste de la ville. Sa santé ne tient qu'à un fil."
+  }
+]

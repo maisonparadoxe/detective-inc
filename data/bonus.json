@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "titre": "Dossier Complet",
+    "effet": "+25% de chance de succès",
+    "bonus": 25,
+    "negatif": null
+  },
+  {
+    "id": 2,
+    "titre": "Contact Police",
+    "effet": "Réduit le danger de 1 point",
+    "bonus": 0,
+    "dangerMod": -1,
+    "negatif": null
+  },
+  {
+    "id": 3,
+    "titre": "Témoin Inattendu",
+    "effet": "Effet aléatoire — peut aider ou nuire",
+    "bonus": 0,
+    "aleatoire": true,
+    "negatif": "Peut réduire les chances de succès de 15%"
+  },
+  {
+    "id": 4,
+    "titre": "Indic de Confiance",
+    "effet": "+20% succès sur crimes de réflexion",
+    "bonus": 20,
+    "type": "reflexion",
+    "negatif": null
+  },
+  {
+    "id": 5,
+    "titre": "Couverture Officielle",
+    "effet": "Annule les pertes de réputation en cas d'échec",
+    "bonus": 0,
+    "protectRep": true,
+    "negatif": null
+  },
+  {
+    "id": 6,
+    "titre": "Pression Médiatique",
+    "effet": "+30% succès, mais double la perte de réputation si échec",
+    "bonus": 30,
+    "repMalus": 2,
+    "negatif": "Double la perte de réputation en cas d'échec"
+  },
+  {
+    "id": 7,
+    "titre": "Archive Occulte",
+    "effet": "+35% sur crimes fantastiques",
+    "bonus": 35,
+    "type": "fantastique",
+    "negatif": null
+  },
+  {
+    "id": 8,
+    "titre": "Filet de Sécurité",
+    "effet": "L'enquêteur ne peut pas être blessé",
+    "bonus": 0,
+    "protectDet": true,
+    "negatif": null
+  }
+]

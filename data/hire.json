@@ -1,0 +1,116 @@
+[
+  {
+    "id": 10,
+    "nom": "Bastien Crue",
+    "age": 24,
+    "action": 3,
+    "reflexion": 2,
+    "danger": 3,
+    "salaire": 80,
+    "corrompu": false,
+    "malade": false,
+    "traits": [
+      {
+        "nom": "Novice",
+        "effet": "novice",
+        "tooltip": "Narratif - débutant",
+        "type": "neutral"
+      },
+      {
+        "nom": "Courageux",
+        "effet": "danger",
+        "bonus": 3,
+        "tooltip": "+3% sur crimes Dangereux",
+        "type": "positive"
+      }
+    ],
+    "bio": "Tout juste sorti de l'académie. Motivé, inexpérimenté.",
+    "cout": 150
+  },
+  {
+    "id": 11,
+    "nom": "Simone Ader",
+    "age": 41,
+    "action": 2,
+    "reflexion": 5,
+    "danger": 2,
+    "salaire": 125,
+    "corrompu": false,
+    "malade": false,
+    "traits": [
+      {
+        "nom": "Experte",
+        "effet": "reflexion",
+        "bonus": 5,
+        "tooltip": "+5% sur crimes de Réflexion",
+        "type": "positive"
+      },
+      {
+        "nom": "Chère",
+        "effet": "expensive",
+        "tooltip": "Salaire élevé",
+        "type": "neutral"
+      }
+    ],
+    "bio": "Spécialiste des affaires complexes. Prix en conséquence.",
+    "cout": 300
+  },
+  {
+    "id": 12,
+    "nom": "Jules Marchand",
+    "age": 34,
+    "action": 4,
+    "reflexion": 3,
+    "danger": 1,
+    "salaire": 100,
+    "corrompu": false,
+    "malade": false,
+    "traits": [
+      {
+        "nom": "Action",
+        "effet": "action",
+        "bonus": 5,
+        "tooltip": "+5% sur crimes d'Action",
+        "type": "positive"
+      },
+      {
+        "nom": "Équilibré",
+        "effet": "all",
+        "bonus": 2,
+        "tooltip": "+2% sur tous les crimes",
+        "type": "positive"
+      }
+    ],
+    "bio": "Ancien boxeur reconverti. Préfère les résultats directs.",
+    "cout": 200
+  },
+  {
+    "id": 13,
+    "nom": "Nora Stein",
+    "age": 38,
+    "action": 2,
+    "reflexion": 4,
+    "danger": 4,
+    "salaire": 115,
+    "corrompu": false,
+    "malade": false,
+    "traits": [
+      {
+        "nom": "Téméraire",
+        "effet": "danger",
+        "bonus": 5,
+        "tooltip": "+5% sur crimes Dangereux",
+        "type": "positive"
+      },
+      {
+        "nom": "Analytique",
+        "effet": "reflexion",
+        "bonus": 3,
+        "tooltip": "+3% sur crimes de Réflexion",
+        "type": "positive"
+      }
+    ],
+    "bio": "Passée par plusieurs agences. Sait gérer le risque.",
+    "cout": 250
+  }
+]

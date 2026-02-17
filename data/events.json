@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "titre": "Grève des policiers",
+    "desc": "Les forces de l'ordre sont inopérantes. Les crimes de type Danger sont plus risqués aujourd'hui.",
+    "effet": "danger+1"
+  },
+  {
+    "id": 2,
+    "titre": "Presse favorable",
+    "desc": "Un article vous présente sous un jour flatteur. Bonus de réputation.",
+    "effet": "rep+5"
+  },
+  {
+    "id": 3,
+    "titre": "Pluie torrentielle",
+    "desc": "Les déplacements sont difficiles. Taux de succès réduit de 10% pour tous.",
+    "effet": "global-10"
+  },
+  {
+    "id": 4,
+    "titre": "Client mystérieux",
+    "desc": "Un inconnu laisse une enveloppe contenant 200€ et aucune explication.",
+    "effet": "money+200"
+  },
+  {
+    "id": 5,
+    "titre": "Inspection des Mœurs",
+    "desc": "Des agents scrutent vos activités. Un enquêteur corrompu est suspendu ce jour.",
+    "effet": "suspend-corrupt"
+  },
+  {
+    "id": 6,
+    "titre": "Nuit de brouillard",
+    "desc": "La ville est paralysée. Un crime supplémentaire aléatoire s'ajoute au plateau.",
+    "effet": "extra-crime"
+  },
+  {
+    "id": 7,
+    "titre": "Rumeurs de couloirs",
+    "desc": "On parle de votre agence en mauvais termes. -5 réputation.",
+    "effet": "rep-5"
+  },
+  {
+    "id": 8,
+    "titre": "Calme plat",
+    "desc": "Rien de particulier aujourd'hui. Journée normale.",
+    "effet": "none"
+  }
+]
