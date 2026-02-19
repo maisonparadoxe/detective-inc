@@ -119,18 +119,15 @@ function startMorning() {
   G.dangerModifier = 0;
   G.results = [];
 
-  // Pick event
   G.event = EVENTS[Math.floor(Math.random() * EVENTS.length)];
   applyEventStart(G.event);
 
-  // Pick 3 crimes
   const pool = [...ALL_CRIMES].sort(() => Math.random()-0.5);
   G.crimes = pool.slice(0,3);
   if (G.event.effet === 'extra-crime') {
     G.crimes.push(pool[3]);
   }
 
-  // Pick 2 bonus cards
   const bpool = [...ALL_BONUS].sort(() => Math.random()-0.5);
   G.bonusCards = bpool.slice(0,2);
 
@@ -367,21 +364,17 @@ function resolveCrime(crime, det, bonus) {
   
   let finalChance = baseChance;
   
-  // Traits
   det.traits.forEach(t => {
     if (t.effet === crimeType && t.bonus) finalChance += t.bonus;
     if (t.effet === 'all' && t.bonus) finalChance += t.bonus;
   });
   
-  // Reputation
   if (G.reputation > 70) finalChance += 5;
   if (G.reputation < 30) finalChance -= 5;
   
-  // Event modifiers
   finalChance += G.globalModifier;
   if (crimeType === 'danger') finalChance -= G.dangerModifier * 5;
   
-  // Bonus card
   if (bonus) {
     if (bonus.aleatoire) {
       const rnd = Math.random();
@@ -457,12 +450,10 @@ function renderResolution() {
 function startEvening() {
   G.phase = 'evening';
   
-  // Decrease availability
   G.detectives.forEach(d => {
     if (d.indisponible > 0) d.indisponible--;
   });
   
-  // Salaries
   let salaryTotal = 0;
   G.detectives.forEach(d => {
     salaryTotal += d.salaire;
@@ -474,7 +465,6 @@ function startEvening() {
   
   addLog(`💰 Salaires: -${salaryTotal}€, Loyer: -${rent}€`, 'system');
   
-  // Age every 5 days
   if (G.day % 5 === 0) {
     G.detectives.forEach(d => {
       d.age++;
@@ -488,7 +478,6 @@ function startEvening() {
   renderEvening();
   updateUI();
   
-  // Check game over
   const availableDets = G.detectives.filter(d=>d.indisponible===0).length;
   if (G.money <= 0 && availableDets === 0) {
     gameOver('Vos fonds sont épuisés et aucun enquêteur n\'est disponible.');
@@ -545,9 +534,6 @@ function nextDay() {
   startMorning();
 }
 
-/* ══════════════════════════════════════════════
-   RENDERING HELPERS
-══════════════════════════════════════════════ */
 function renderStatPips(det) {
   const stats = [
     {label:'Action', val:det.action, color:'#c8b896'},
@@ -598,9 +584,6 @@ function renderTraits(traits) {
   }).join('');
 }
 
-/* ══════════════════════════════════════════════
-   MODALS
-══════════════════════════════════════════════ */
 function openHireModal() {
   const content = document.getElementById('modal-content');
   const alreadyHiredIds = new Set(G.detectives.map(d=>d.id));
@@ -713,9 +696,6 @@ function closeModal() {
   document.getElementById('overlay').classList.remove('active');
 }
 
-/* ══════════════════════════════════════════════
-   UI
-══════════════════════════════════════════════ */
 function updateUI() {
   document.getElementById('ui-money').textContent = `${G.money}€`;
   document.getElementById('ui-money').className = `stat-val ${G.money>300?'good':G.money>100?'warn':'danger'}`;
@@ -735,7 +715,6 @@ function addLog(msg, type='system') {
   entry.textContent = msg;
   log.appendChild(entry);
   log.scrollTop = log.scrollHeight;
-  // Keep max 30 entries
   while(log.children.length > 30) log.removeChild(log.firstChild);
 }
 
@@ -751,7 +730,6 @@ function gameOver(reason) {
   go.classList.add('active');
 }
 
-/* Close overlay on background click */
 document.getElementById('overlay').addEventListener('click', function(e){
   if(e.target === this) closeModal();
 });
