@@ -8,13 +8,30 @@ let EVENTS = [];
 let HIRE_CANDIDATES = [];
 
 async function loadGameData() {
+  console.log('🔄 Début du chargement des données...');
   try {
+    console.log('📂 Chargement des fichiers JSON...');
     const [crimes, detectives, bonus, events, hire] = await Promise.all([
-      fetch('data/crimes.json').then(r => r.json()),
-      fetch('data/detectives.json').then(r => r.json()),
-      fetch('data/bonus.json').then(r => r.json()),
-      fetch('data/events.json').then(r => r.json()),
-      fetch('data/hire.json').then(r => r.json())
+      fetch('data/crimes.json').then(r => {
+        console.log('✓ crimes.json chargé');
+        return r.json();
+      }),
+      fetch('data/detectives.json').then(r => {
+        console.log('✓ detectives.json chargé');
+        return r.json();
+      }),
+      fetch('data/bonus.json').then(r => {
+        console.log('✓ bonus.json chargé');
+        return r.json();
+      }),
+      fetch('data/events.json').then(r => {
+        console.log('✓ events.json chargé');
+        return r.json();
+      }),
+      fetch('data/hire.json').then(r => {
+        console.log('✓ hire.json chargé');
+        return r.json();
+      })
     ]);
     
     ALL_CRIMES = crimes;
@@ -34,7 +51,7 @@ async function loadGameData() {
     return true;
   } catch (error) {
     console.error('❌ Erreur de chargement des données:', error);
-    alert('Erreur de chargement du jeu. Vérifiez que tous les fichiers JSON sont présents dans le dossier data/');
+    alert('⚠️ ERREUR DE CHARGEMENT\n\nLe jeu ne peut pas charger les fichiers JSON.\n\nVous devez utiliser un serveur web local !\n\nOuvrez la console (F12) pour plus de détails.\n\nSolution : python -m http.server 8000');
     return false;
   }
 }
@@ -43,10 +60,15 @@ async function loadGameData() {
    START SCREEN
 ══════════════════════════════════════════════ */
 async function startGame() {
+  console.log('🎮 Bouton "Commencer à Jouer" cliqué !');
   const loaded = await loadGameData();
   if (loaded) {
+    console.log('🎯 Données chargées avec succès, lancement du jeu...');
     document.getElementById('start-screen').classList.add('hidden');
+    document.getElementById('game').style.display = 'grid';
     initGame();
+  } else {
+    console.error('❌ Échec du chargement des données');
   }
 }
 
@@ -57,6 +79,7 @@ let G = {};
 
 function initGame() {
   document.getElementById('gameover').classList.remove('active');
+  document.getElementById('game').style.display = 'flex';
   G = {
     day: 1,
     money: 800,
@@ -70,102 +93,6 @@ function initGame() {
     bonusCards: [],
     assignments: {},
     phase: 'morning',
-    event: null,
-    results: [],
-    totalDays: 0,
-    totalResolved: 0,
-    globalModifier: 0,
-    dangerModifier: 0,
-    selectedCrime: null,
-    selectedDet: null,
-    selectedBonus: null,
-  };
-  startMorning();
-}
-  { id:4, nom:"Margot Sérane", age:26, action:5, reflexion:2, danger:2, salaire:90, corrompu:false, malade:false, traits:[
-    {nom:"Impétueuse", effet:"action", bonus:5, tooltip:"+5% sur crimes d'Action", type:"positive"},
-    {nom:"Rapide", effet:"speed", tooltip:"Narratif - agit vite", type:"neutral"}
-  ], bio:"Ancienne championne d'athlétisme. S'ennuie vite, agit d'abord." },
-  { id:5, nom:"Théodore Vane", age:44, action:1, reflexion:4, danger:4, salaire:120, corrompu:false, malade:false, traits:[
-    {nom:"Téméraire", effet:"danger", bonus:5, tooltip:"+5% sur crimes Dangereux", type:"positive"},
-    {nom:"Intuitif", effet:"intuition", tooltip:"Narratif - flair naturel", type:"neutral"}
-  ], bio:"Passé trouble dans les milieux souterrains. Connaît tout le monde, rien ne l'effraie." },
-  { id:6, nom:"Irma Duval", age:38, action:3, reflexion:4, danger:2, salaire:115, corrompu:false, malade:false, traits:[
-    {nom:"Méthodique", effet:"reflexion", bonus:5, tooltip:"+5% sur crimes de Réflexion", type:"positive"},
-    {nom:"Discrète", effet:"discretion", tooltip:"Narratif - passe inaperçue", type:"neutral"}
-  ], bio:"Ancienne journaliste d'investigation. Pose les bonnes questions." },
-  { id:7, nom:"Lucien Faux", age:31, action:4, reflexion:2, danger:3, salaire:95, corrompu:true, malade:false, traits:[
-    {nom:"Efficace", effet:"action", bonus:5, tooltip:"+5% sur crimes d'Action", type:"positive"},
-    {nom:"Corrompu", effet:"corrupt", tooltip:"Prélève 20% des gains", type:"corrupt"}
-  ], bio:"Les résultats sont là. Mais il garde toujours quelque chose pour lui." },
-  { id:8, nom:"Octave Brun", age:61, action:1, reflexion:5, danger:1, salaire:105, corrompu:false, malade:true, traits:[
-    {nom:"Brillant", effet:"reflexion", bonus:5, tooltip:"+5% sur crimes de Réflexion", type:"positive"},
-    {nom:"Fragile", effet:"injury_risk", tooltip:"Plus de risques de blessure", type:"negative"},
-    {nom:"Malade", effet:"sick", tooltip:"-1 Action permanent", type:"sick"}
-  ], bio:"Le meilleur analyste de la ville. Sa santé ne tient qu'à un fil." },
-];
-
-const ALL_BONUS = [
-  { id:1, titre:"Dossier Complet", effet:"+25% de chance de succès", bonus:25, negatif:null },
-  { id:2, titre:"Contact Police", effet:"Réduit le danger de 1 point", bonus:0, dangerMod:-1, negatif:null },
-  { id:3, titre:"Témoin Inattendu", effet:"Effet aléatoire — peut aider ou nuire", bonus:0, aleatoire:true, negatif:"Peut réduire les chances de succès de 15%" },
-  { id:4, titre:"Indic de Confiance", effet:"+20% succès sur crimes de réflexion", bonus:20, type:"reflexion", negatif:null },
-  { id:5, titre:"Couverture Officielle", effet:"Annule les pertes de réputation en cas d'échec", bonus:0, protectRep:true, negatif:null },
-  { id:6, titre:"Pression Médiatique", effet:"+30% succès, mais double la perte de réputation si échec", bonus:30, repMalus:2, negatif:"Double la perte de réputation en cas d'échec" },
-  { id:7, titre:"Archive Occulte", effet:"+35% sur crimes fantastiques", bonus:35, type:"fantastique", negatif:null },
-  { id:8, titre:"Filet de Sécurité", effet:"L'enquêteur ne peut pas être blessé", bonus:0, protectDet:true, negatif:null },
-];
-
-const EVENTS = [
-  { id:1, titre:"Grève des policiers", desc:"Les forces de l'ordre sont inopérantes. Les crimes de type Danger sont plus risqués aujourd'hui.", effet:"danger+1" },
-  { id:2, titre:"Presse favorable", desc:"Un article vous présente sous un jour flatteur. Bonus de réputation.", effet:"rep+5" },
-  { id:3, titre:"Pluie torrentielle", desc:"Les déplacements sont difficiles. Taux de succès réduit de 10% pour tous.", effet:"global-10" },
-  { id:4, titre:"Client mystérieux", desc:"Un inconnu laisse une enveloppe contenant 200€ et aucune explication.", effet:"money+200" },
-  { id:5, titre:"Inspection des Mœurs", desc:"Des agents scrutent vos activités. Un enquêteur corrompu est suspendu ce jour.", effet:"suspend-corrupt" },
-  { id:6, titre:"Nuit de brouillard", desc:"La ville est paralysée. Un crime supplémentaire aléatoire s'ajoute au plateau.", effet:"extra-crime" },
-  { id:7, titre:"Rumeurs de couloirs", desc:"On parle de votre agence en mauvais termes. -5 réputation.", effet:"rep-5" },
-  { id:8, titre:"Calme plat", desc:"Rien de particulier aujourd'hui. Journée normale.", effet:"none" },
-];
-
-const HIRE_CANDIDATES = [
-  { id:10, nom:"Bastien Crue", age:24, action:3, reflexion:2, danger:3, salaire:80, corrompu:false, malade:false, traits:[
-    {nom:"Novice", effet:"novice", tooltip:"Narratif - débutant", type:"neutral"},
-    {nom:"Courageux", effet:"danger", bonus:3, tooltip:"+3% sur crimes Dangereux", type:"positive"}
-  ], bio:"Tout juste sorti de l'académie. Motivé, inexpérimenté.", cout:150 },
-  { id:11, nom:"Simone Ader", age:41, action:2, reflexion:5, danger:2, salaire:125, corrompu:false, malade:false, traits:[
-    {nom:"Experte", effet:"reflexion", bonus:5, tooltip:"+5% sur crimes de Réflexion", type:"positive"},
-    {nom:"Chère", effet:"expensive", tooltip:"Salaire élevé", type:"neutral"}
-  ], bio:"Spécialiste des affaires complexes. Prix en conséquence.", cout:300 },
-  { id:12, nom:"Jules Marchand", age:34, action:4, reflexion:3, danger:1, salaire:100, corrompu:false, malade:false, traits:[
-    {nom:"Action", effet:"action", bonus:5, tooltip:"+5% sur crimes d'Action", type:"positive"},
-    {nom:"Équilibré", effet:"all", bonus:2, tooltip:"+2% sur tous les crimes", type:"positive"}
-  ], bio:"Ancien boxeur reconverti. Préfère les résultats directs.", cout:200 },
-  { id:13, nom:"Nora Stein", age:38, action:2, reflexion:4, danger:4, salaire:115, corrompu:false, malade:false, traits:[
-    {nom:"Téméraire", effet:"danger", bonus:5, tooltip:"+5% sur crimes Dangereux", type:"positive"},
-    {nom:"Analytique", effet:"reflexion", bonus:3, tooltip:"+3% sur crimes de Réflexion", type:"positive"}
-  ], bio:"Passée par plusieurs agences. Sait gérer le risque.", cout:250 },
-];
-
-/* ══════════════════════════════════════════════
-   ÉTAT
-══════════════════════════════════════════════ */
-let G = {};
-
-function initGame() {
-  document.getElementById('gameover').classList.remove('active');
-  G = {
-    day: 1,
-    money: 800,
-    reputation: 50,
-    detectives: [
-      {...ALL_DETECTIVES[0], indisponible:0},
-      {...ALL_DETECTIVES[2], indisponible:0},
-      {...ALL_DETECTIVES[3], indisponible:0},
-    ],
-    crimes: [],
-    bonusCards: [],
-    assignments: {},   // crimeId -> { detId, bonusId }
-    phase: 'morning',  // morning | assign | resolve | evening
     event: null,
     results: [],
     totalDays: 0,
@@ -205,448 +132,488 @@ function startMorning() {
 
   // Pick 2 bonus cards
   const bpool = [...ALL_BONUS].sort(() => Math.random()-0.5);
-  G.bonusCards = bpool.slice(0,2).map(b => ({...b, used:false}));
+  G.bonusCards = bpool.slice(0,2);
 
-  // Age detectives every 5 days
-  if (G.day % 5 === 0) {
-    G.detectives.forEach(d => {
-      d.age++;
-      if (d.age > 55) d.action = Math.max(1, d.action-1);
-      if (d.age > 50) d.reflexion = Math.min(5, d.reflexion+1);
-    });
-  }
-
-  // Check available detectives
-  G.detectives.forEach(d => {
-    if (d.indisponible > 0) d.indisponible--;
-  });
-
-  updateUI();
   renderMorning();
+  updateUI();
 }
 
 function applyEventStart(ev) {
-  switch(ev.effet) {
-    case 'rep+5': G.reputation = Math.min(100, G.reputation+5); addLog(`${ev.titre} — +5 réputation.`, 'event'); break;
-    case 'rep-5': G.reputation = Math.max(0, G.reputation-5); addLog(`${ev.titre} — -5 réputation.`, 'event'); break;
-    case 'money+200': G.money += 200; addLog(`${ev.titre} — +200€ trouvés.`, 'event'); break;
-    case 'global-10': G.globalModifier = -10; addLog(`${ev.titre} — -10% succès aujourd'hui.`, 'event'); break;
-    case 'danger+1': G.dangerModifier = 1; addLog(`${ev.titre} — Danger accru.`, 'event'); break;
-    case 'suspend-corrupt':
-      G.detectives.forEach(d => { if(d.corrompu && d.indisponible===0) { d.indisponible=1; addLog(`${d.nom} suspendu(e) par l'Inspection.`,'event'); } });
-      break;
-    default: addLog(`${ev.titre}.`, 'event');
+  if (ev.effet.startsWith('rep+')) {
+    const val = parseInt(ev.effet.replace('rep+',''));
+    G.reputation = Math.min(100, G.reputation + val);
+  }
+  else if (ev.effet.startsWith('rep-')) {
+    const val = parseInt(ev.effet.replace('rep-',''));
+    G.reputation = Math.max(0, G.reputation - val);
+  }
+  else if (ev.effet.startsWith('money+')) {
+    const val = parseInt(ev.effet.replace('money+',''));
+    G.money += val;
+  }
+  else if (ev.effet.startsWith('global-')) {
+    const val = parseInt(ev.effet.replace('global-',''));
+    G.globalModifier = -val;
+  }
+  else if (ev.effet.startsWith('danger+')) {
+    const val = parseInt(ev.effet.replace('danger+',''));
+    G.dangerModifier = val;
+  }
+  else if (ev.effet === 'suspend-corrupt') {
+    G.detectives.filter(d=>d.corrompu).forEach(d=>d.indisponible=1);
   }
 }
 
-function startAssign() {
-  G.phase = 'assign';
-  updateUI();
-  renderAssign();
+function renderMorning() {
+  const main = document.getElementById('main');
+  let html = `<div class="phase-header t-heading">Aube — Jour ${G.day}</div>`;
+  
+  html += `<div class="card" style="margin-bottom:16px;">
+    <div class="event-tag">${G.event.titre}</div>
+    <div style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">${G.event.desc}</div>
+  </div>`;
+
+  html += `<div class="t-label" style="margin-bottom:8px;">Nouvelles Affaires</div>`;
+  html += `<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;">`;
+  G.crimes.forEach(c=>{
+    html += `<div class="crime-card">
+      <div class="crime-title">${c.titre}</div>
+      <div class="crime-tag ${c.tag.toLowerCase()}">${c.tag}</div>
+      <div class="crime-desc">${c.desc}</div>
+      ${renderStatPipsForCrime(c)}
+      <div class="crime-reward">
+        <span class="t-label">Récompense</span>
+        <span class="t-mono" style="color:var(--accent);">${c.recompense}€</span>
+      </div>
+      <div class="crime-time">
+        <span class="t-label">Durée</span>
+        <span class="t-mono">${c.temps} jour${c.temps>1?'s':''}</span>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  html += `<div class="t-label" style="margin-bottom:8px;">Cartes Bonus Disponibles</div>`;
+  html += `<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;">`;
+  G.bonusCards.forEach(b=>{
+    html += `<div class="bonus-card">
+      <div style="font-size:0.9rem;margin-bottom:4px;font-weight:500;">${b.titre}</div>
+      <div style="font-size:0.8rem;color:var(--text-secondary);">${b.effet}</div>
+      ${b.negatif ? `<div style="font-size:0.75rem;color:var(--danger);margin-top:6px;">${b.negatif}</div>` : ''}
+    </div>`;
+  });
+  html += `</div>`;
+
+  main.innerHTML = html;
+  document.getElementById('btn-action').textContent = 'Passer à l\'Assignation';
+  document.getElementById('btn-action').onclick = startAssignment;
+  addLog(`📅 Jour ${G.day} — ${G.event.titre}`, 'system');
 }
 
-function resolveAll() {
+function startAssignment() {
+  G.phase = 'assign';
+  renderAssignment();
+  updateUI();
+}
+
+function renderAssignment() {
+  const main = document.getElementById('main');
+  let html = `<div class="phase-header t-heading">Assignation — Jour ${G.day}</div>`;
+  
+  html += `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:20px;">`;
+  G.crimes.forEach(c=>{
+    const assigned = G.assignments[c.id];
+    const isSelected = G.selectedCrime === c.id;
+    html += `<div class="crime-card ${assigned?'assigned':''} ${isSelected?'selected':''}" onclick="selectCrime(${c.id})">
+      <div class="crime-title">${c.titre}</div>
+      <div class="crime-tag ${c.tag.toLowerCase()}">${c.tag}</div>
+      <div class="crime-desc">${c.desc}</div>
+      ${renderStatPipsForCrime(c)}
+      ${assigned ? `<div class="assigned-badge">
+        ${G.detectives.find(d=>d.id===assigned.detId).nom}
+        ${assigned.bonusId ? `+ ${G.bonusCards.find(b=>b.id===assigned.bonusId).titre}` : ''}
+      </div>` : ''}
+    </div>`;
+  });
+  html += `</div>`;
+
+  html += `<div class="t-label" style="margin-bottom:8px;">Détectives Disponibles</div>`;
+  html += `<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;">`;
+  G.detectives.filter(d=>d.indisponible===0).forEach(d=>{
+    const alreadyUsed = Object.values(G.assignments).some(a=>a.detId===d.id);
+    const isSelected = G.selectedDet === d.id;
+    html += `<div class="det-card ${alreadyUsed?'disabled':''} ${isSelected?'selected':''}" onclick="selectDetective(${d.id})">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+        <span class="t-heading" style="font-size:0.95rem;">${d.nom}</span>
+        <span class="t-label">${d.age} ans</span>
+      </div>
+      ${renderStatPips(d)}
+      <div class="det-traits">${renderTraits(d.traits)}</div>
+      ${alreadyUsed ? `<div class="t-label" style="margin-top:8px;color:var(--text-muted);">Déjà assigné</div>` : ''}
+    </div>`;
+  });
+  html += `</div>`;
+
+  html += `<div class="t-label" style="margin-bottom:8px;">Cartes Bonus</div>`;
+  html += `<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;">`;
+  G.bonusCards.forEach(b=>{
+    const alreadyUsed = Object.values(G.assignments).some(a=>a.bonusId===b.id);
+    const isSelected = G.selectedBonus === b.id;
+    html += `<div class="bonus-card ${alreadyUsed?'disabled':''} ${isSelected?'selected':''}" onclick="selectBonus(${b.id})">
+      <div style="font-size:0.9rem;margin-bottom:4px;font-weight:500;">${b.titre}</div>
+      <div style="font-size:0.8rem;color:var(--text-secondary);">${b.effet}</div>
+      ${b.negatif ? `<div style="font-size:0.75rem;color:var(--danger);margin-top:6px;">${b.negatif}</div>` : ''}
+      ${alreadyUsed ? `<div class="t-label" style="margin-top:8px;color:var(--text-muted);">Déjà utilisée</div>` : ''}
+    </div>`;
+  });
+  html += `</div>`;
+
+  if (G.selectedCrime && G.selectedDet) {
+    html += `<button class="btn primary" onclick="assignCrime()">✓ Assigner ${G.detectives.find(d=>d.id===G.selectedDet).nom} à cette affaire</button>`;
+  }
+
+  main.innerHTML = html;
+  document.getElementById('btn-action').textContent = 'Valider les Assignations';
+  document.getElementById('btn-action').onclick = validateAssignments;
+}
+
+function selectCrime(id) {
+  if (G.assignments[id]) return;
+  G.selectedCrime = id;
+  renderAssignment();
+}
+
+function selectDetective(id) {
+  const alreadyUsed = Object.values(G.assignments).some(a=>a.detId===id);
+  if (alreadyUsed) return;
+  G.selectedDet = id;
+  renderAssignment();
+}
+
+function selectBonus(id) {
+  const alreadyUsed = Object.values(G.assignments).some(a=>a.bonusId===id);
+  if (alreadyUsed) return;
+  G.selectedBonus = id;
+  renderAssignment();
+}
+
+function assignCrime() {
+  if (!G.selectedCrime || !G.selectedDet) return;
+  G.assignments[G.selectedCrime] = {
+    detId: G.selectedDet,
+    bonusId: G.selectedBonus
+  };
+  const det = G.detectives.find(d=>d.id===G.selectedDet);
+  const crime = G.crimes.find(c=>c.id===G.selectedCrime);
+  addLog(`${det.nom} assigné à ${crime.titre}${G.selectedBonus ? ' + bonus' : ''}`, 'system');
+  G.selectedCrime = null;
+  G.selectedDet = null;
+  G.selectedBonus = null;
+  renderAssignment();
+}
+
+function validateAssignments() {
+  const assignedCount = Object.keys(G.assignments).length;
+  if (assignedCount === 0) {
+    addLog('Aucune affaire assignée. Passez directement au soir.', 'system');
+    startEvening();
+    return;
+  }
+  startResolution();
+}
+
+function startResolution() {
   G.phase = 'resolve';
   G.results = [];
-
-  // Resolve assigned crimes
-  G.crimes.forEach(crime => {
-    const asgn = G.assignments[crime.id];
-    if (!asgn) {
-      G.results.push({ crime, outcome:'ignored', money:0, repDelta:-3, story:null });
-      G.reputation = Math.max(0, G.reputation - 3);
-      return;
-    }
-    const det = G.detectives.find(d => d.id === asgn.detId);
-    const bonus = asgn.bonusId ? G.bonusCards.find(b => b.id === asgn.bonusId) : null;
-
-    // Compute success chance
-    let chance = computeChance(crime, det, bonus);
-    const roll = Math.random() * 100;
-    const success = roll < chance;
-
-    let money = 0;
-    let repDelta = 0;
-
-    if (success) {
-      money = crime.recompense;
-      // Corrupt detective skims
-      if (det.corrompu) {
-        const skim = Math.floor(money * 0.2);
-        money -= skim;
-        addLog(`${det.nom} a prélevé ${skim}€ au passage.`, 'failure');
-      }
-      repDelta = 5;
-      G.money += money;
-      G.reputation = Math.min(100, G.reputation + repDelta);
+  
+  Object.keys(G.assignments).forEach(crimeId => {
+    const crime = G.crimes.find(c=>c.id==crimeId);
+    const assignment = G.assignments[crimeId];
+    const det = G.detectives.find(d=>d.id===assignment.detId);
+    const bonus = assignment.bonusId ? G.bonusCards.find(b=>b.id===assignment.bonusId) : null;
+    
+    const result = resolveCrime(crime, det, bonus);
+    G.results.push(result);
+    
+    if (result.success) {
+      G.money += result.reward;
+      G.reputation = Math.min(100, G.reputation + result.repGain);
       G.totalResolved++;
-      addLog(`${crime.titre} — Résolu par ${det.nom}. +${money}€`, 'success');
+      addLog(`✓ ${crime.titre} — ${det.nom} réussit. +${result.reward}€, +${result.repGain} rép.`, 'success');
     } else {
-      money = -50;
-      repDelta = bonus && bonus.protectRep ? 0 : -8;
-      
-      // Check for "Expérimenté" trait (rep_protect)
-      const hasRepProtect = det.traits && det.traits.some(t => t.effet === 'rep_protect');
-      if (hasRepProtect && repDelta < 0) {
-        repDelta = Math.floor(repDelta / 2);
-        addLog(`${det.nom} limite les dégâts de réputation grâce à son expérience.`, 'system');
-      }
-      
-      if (G.reputation < 30) repDelta = Math.max(repDelta, -4); // bad rep attire moins d'attention
-      G.money = Math.max(0, G.money + money);
-      G.reputation = Math.max(0, G.reputation + repDelta);
-      
-      // Random: detective hurt on high danger
-      let injuryChance = 0.3;
-      const hasInjuryRisk = det.traits && det.traits.some(t => t.effet === 'injury_risk');
-      if (hasInjuryRisk) injuryChance = 0.5; // Fragile detectives get hurt more easily
-      
-      if (crime.danger >= 4 && Math.random() < injuryChance && !(bonus && bonus.protectDet)) {
-        det.indisponible = 2;
-        addLog(`${det.nom} blessé(e) — indisponible 2 jours.`, 'failure');
-      }
-      addLog(`${crime.titre} — Échec. ${money}€ de pénalité.`, 'failure');
+      G.money -= 50;
+      G.reputation = Math.max(0, G.reputation - result.repLoss);
+      addLog(`✗ ${crime.titre} — ${det.nom} échoue. -50€, -${result.repLoss} rép.`, 'failure');
     }
-
-    G.results.push({ crime, det, bonus, outcome: success?'success':'failure', money, repDelta, story: success ? crime.fins.succes : crime.fins.echec });
+    
+    if (result.injured) {
+      det.indisponible = 2;
+      addLog(`${det.nom} est blessé et indisponible 2 jours.`, 'failure');
+    } else {
+      det.indisponible = crime.temps;
+    }
   });
-
-  G.totalDays++;
+  
+  renderResolution();
   updateUI();
-  renderResults();
 }
 
-function computeChance(crime, det, bonus) {
-  // Base: weighted competence vs difficulty
-  const mainStat = crime.type === 'action' ? det.action : crime.type === 'reflexion' ? det.reflexion : det.danger;
-  const difficulty = crime.type === 'action' ? crime.action : crime.type === 'reflexion' ? crime.reflexion : crime.danger;
-  let chance = 30 + (mainStat / difficulty) * 50;
-
-  // Apply detective trait bonuses
-  if (det.traits && Array.isArray(det.traits)) {
-    det.traits.forEach(trait => {
-      if (trait.bonus) {
-        // Type-specific bonuses
-        if (trait.effet === 'action' && crime.type === 'action') chance += trait.bonus;
-        else if (trait.effet === 'reflexion' && crime.type === 'reflexion') chance += trait.bonus;
-        else if (trait.effet === 'danger' && crime.type === 'danger') chance += trait.bonus;
-        else if (trait.effet === 'all') chance += trait.bonus;
-      }
-      if (trait.malus) {
-        // Type-specific maluses
-        if (trait.effet === 'danger_malus' && crime.type === 'danger') chance -= trait.malus;
-      }
-    });
-  }
-
+function resolveCrime(crime, det, bonus) {
+  const typeMap = { action:'action', reflexion:'reflexion', danger:'danger' };
+  const crimeType = crime.type;
+  
+  let baseChance = (det[crimeType] / (crime[crimeType] + 3)) * 100;
+  baseChance = Math.max(15, Math.min(85, baseChance));
+  
+  let finalChance = baseChance;
+  
+  // Traits
+  det.traits.forEach(t => {
+    if (t.effet === crimeType && t.bonus) finalChance += t.bonus;
+    if (t.effet === 'all' && t.bonus) finalChance += t.bonus;
+  });
+  
+  // Reputation
+  if (G.reputation > 70) finalChance += 5;
+  if (G.reputation < 30) finalChance -= 5;
+  
+  // Event modifiers
+  finalChance += G.globalModifier;
+  if (crimeType === 'danger') finalChance -= G.dangerModifier * 5;
+  
   // Bonus card
   if (bonus) {
-    if (bonus.aleatoire) { chance += (Math.random() > 0.5 ? 20 : -15); }
-    else if (bonus.type && bonus.type === crime.tag.toLowerCase()) { chance += bonus.bonus; }
-    else if (!bonus.type) { chance += bonus.bonus || 0; }
-    if (bonus.dangerMod) { chance += bonus.dangerMod * 8; }
+    if (bonus.aleatoire) {
+      const rnd = Math.random();
+      if (rnd < 0.5) finalChance += 15;
+      else finalChance -= 15;
+    } else {
+      if (bonus.type && bonus.type === crimeType) finalChance += bonus.bonus;
+      else if (bonus.type && bonus.type === crime.tag.toLowerCase()) finalChance += bonus.bonus;
+      else if (!bonus.type) finalChance += bonus.bonus || 0;
+    }
   }
+  
+  finalChance = Math.max(5, Math.min(95, finalChance));
+  
+  const roll = Math.random() * 100;
+  const success = roll <= finalChance;
+  
+  let reward = crime.recompense;
+  if (success && det.corrompu) reward = Math.floor(reward * 0.8);
+  
+  let repGain = 8;
+  let repLoss = 8;
+  if (bonus && bonus.repMalus && !success) repLoss *= bonus.repMalus;
+  if (bonus && bonus.protectRep && !success) repLoss = 0;
+  
+  let injured = false;
+  if (!success && crimeType === 'danger' && Math.random() < 0.4) {
+    if (!bonus || !bonus.protectDet) injured = true;
+  }
+  
+  return {
+    crime,
+    det,
+    bonus,
+    success,
+    reward: success ? reward : 0,
+    repGain: success ? repGain : 0,
+    repLoss: success ? 0 : repLoss,
+    injured,
+    finalChance
+  };
+}
 
-  // Global modifier
-  chance += G.globalModifier;
-
-  // Danger modifier from event
-  if (crime.type === 'danger') chance -= G.dangerModifier * 10;
-
-  // Reputation influence
-  if (G.reputation > 70) chance += 5;
-  if (G.reputation < 30) chance -= 5;
-
-  return Math.min(95, Math.max(10, chance));
+function renderResolution() {
+  const main = document.getElementById('main');
+  let html = `<div class="phase-header t-heading">Résolution — Jour ${G.day}</div>`;
+  
+  html += `<div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">`;
+  G.results.forEach(r => {
+    html += `<div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
+        <div class="t-heading" style="font-size:1rem;">${r.crime.titre}</div>
+        <span class="crime-tag ${r.crime.tag.toLowerCase()}">${r.crime.tag}</span>
+      </div>
+      <div class="t-label" style="margin-bottom:4px;">${r.det.nom}${r.bonus ? ` + ${r.bonus.titre}` : ''}</div>
+      <div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px;">${r.crime.histoire}</div>
+      <div class="result-badge ${r.success?'success':'failure'}">
+        ${r.success ? '✓ Succès' : '✗ Échec'} — ${Math.round(r.finalChance)}% de chances
+      </div>
+      <div style="font-style:italic;color:var(--text-muted);font-size:0.85rem;margin-top:8px;">
+        ${r.success ? r.crime.fins.succes : r.crime.fins.echec}
+      </div>
+      ${r.injured ? `<div class="t-label" style="margin-top:8px;color:var(--danger);">⚠️ ${r.det.nom} est blessé</div>` : ''}
+    </div>`;
+  });
+  html += `</div>`;
+  
+  main.innerHTML = html;
+  document.getElementById('btn-action').textContent = 'Passer au Soir';
+  document.getElementById('btn-action').onclick = startEvening;
 }
 
 function startEvening() {
   G.phase = 'evening';
-
-  // Pay salaries
-  let totalSalary = 0;
-  G.detectives.forEach(d => { totalSalary += d.salaire; });
-  const rent = 100;
-  const expenses = totalSalary + rent;
-  G.money = Math.max(0, G.money - expenses);
-  addLog(`Frais du jour — salaires ${totalSalary}€ + loyer ${rent}€ = -${expenses}€.`, 'system');
-
-  // Sick detective random
+  
+  // Decrease availability
   G.detectives.forEach(d => {
-    if (!d.malade && Math.random() < 0.05) {
-      d.malade = true;
-      d.action = Math.max(1, d.action - 1);
-      addLog(`${d.nom} tombe malade. -1 Action.`, 'failure');
-    }
+    if (d.indisponible > 0) d.indisponible--;
   });
-
+  
+  // Salaries
+  let salaryTotal = 0;
+  G.detectives.forEach(d => {
+    salaryTotal += d.salaire;
+  });
+  
+  const rent = 100;
+  const totalCosts = salaryTotal + rent;
+  G.money -= totalCosts;
+  
+  addLog(`💰 Salaires: -${salaryTotal}€, Loyer: -${rent}€`, 'system');
+  
+  // Age every 5 days
+  if (G.day % 5 === 0) {
+    G.detectives.forEach(d => {
+      d.age++;
+      if (d.age >= 50 && Math.random() < 0.3) {
+        d.action = Math.max(1, d.action - 1);
+      }
+    });
+    addLog('⏳ Vos détectives vieillissent...', 'system');
+  }
+  
+  renderEvening();
+  updateUI();
+  
   // Check game over
-  if (G.money <= 0 && G.detectives.filter(d=>d.indisponible===0).length === 0) {
-    gameOver("L'agence n'a plus de fonds ni de détectives disponibles.");
+  const availableDets = G.detectives.filter(d=>d.indisponible===0).length;
+  if (G.money <= 0 && availableDets === 0) {
+    gameOver('Vos fonds sont épuisés et aucun enquêteur n\'est disponible.');
     return;
   }
   if (G.reputation <= 0) {
-    gameOver("Votre réputation est anéantie. Plus personne ne vous fait confiance.");
+    gameOver('Votre réputation est tombée à zéro. L\'agence est discréditée.');
     return;
   }
-
-  G.day++;
-  updateUI();
-  renderEvening(totalSalary, rent);
+  
+  G.totalDays++;
 }
 
-/* ══════════════════════════════════════════════
-   RENDER
-══════════════════════════════════════════════ */
-function renderMorning() {
+function renderEvening() {
   const main = document.getElementById('main');
-  let html = `<div class="phase-header"><div class="phase-title t-title">Jour ${G.day} — Aube</div><div class="phase-sub">Nouvelles affaires reçues. Préparez vos enquêteurs.</div></div>`;
-
-  // Event
-  if (G.event && G.event.effet !== 'none') {
-    html += `<div class="event-banner"><div class="event-title">${G.event.titre}</div><div class="event-desc">${G.event.desc}</div></div>`;
-  }
-
-  // Crimes
-  html += `<div class="section-label">Affaires du jour</div>`;
-  html += `<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px;">`;
-  G.crimes.forEach(c => {
-    html += renderCrimeCard(c, false);
-  });
-  html += `</div>`;
-
-  // Bonus cards
-  html += `<div class="section-label">Cartes bonus disponibles</div>`;
-  html += `<div class="grid-2" style="margin-bottom:24px;">`;
-  G.bonusCards.forEach(b => {
-    html += `<div class="bonus-card"><div class="bonus-title t-heading">${b.titre}</div><div class="bonus-effect">${b.effet}</div>${b.negatif?`<div class="bonus-neg">${b.negatif}</div>`:''}</div>`;
-  });
-  html += `</div>`;
-
-  main.innerHTML = html;
-  document.getElementById('btn-action').textContent = 'Assigner les enquêteurs →';
-  document.getElementById('btn-action').onclick = startAssign;
-}
-
-function renderAssign() {
-  const main = document.getElementById('main');
-  let html = `<div class="phase-header"><div class="phase-title t-title">Assignation</div><div class="phase-sub">Sélectionnez un crime, puis un enquêteur, puis une carte bonus optionnelle.</div></div>`;
-
-  // Crimes
-  html += `<div class="section-label">Affaires — cliquez pour sélectionner</div>`;
-  html += `<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px;">`;
-  G.crimes.forEach(c => {
-    const asgn = G.assignments[c.id];
-    const det = asgn ? G.detectives.find(d=>d.id===asgn.detId) : null;
-    let cls = '';
-    if (G.selectedCrime && G.selectedCrime.id === c.id) cls = 'selected';
-    else if (asgn) cls = 'assigned';
-    html += renderCrimeCard(c, true, cls, det);
-  });
-  html += `</div>`;
-
-  // Detectives
-  html += `<div class="section-label">Enquêteurs disponibles</div>`;
-  html += `<div class="grid-2" style="margin-bottom:20px;">`;
-  const availDetIds = new Set(Object.values(G.assignments).map(a=>a.detId));
-  G.detectives.forEach((d,i) => {
-    const unavail = d.indisponible > 0 || availDetIds.has(d.id);
-    let cls = unavail ? 'unavailable' : '';
-    if (G.selectedDet && G.selectedDet.id === d.id) cls = 'selected';
-    if (d.corrompu) cls += ' corrupt';
-    
-    // Render traits with tooltips
-    const traitsHtml = d.traits.map(t => {
-      const traitClass = t.type === 'corrupt' ? 'corrupt' : t.type === 'sick' ? 'sick' : t.type === 'positive' ? 'positive' : '';
-      return `<span class="trait ${traitClass}" data-tooltip="${t.tooltip}">${t.nom}</span>`;
-    }).join('');
-    
-    html += `<div class="detective-card ${cls}" style="animation-delay:${i*50}ms" onclick="selectDet(${d.id})">
-      <div class="det-header"><span class="det-name t-heading">${d.nom}</span><span class="det-age">${d.age} ans</span></div>
+  let html = `<div class="phase-header t-heading">Soir — Jour ${G.day}</div>`;
+  
+  html += `<div class="card" style="margin-bottom:16px;">
+    <div class="t-heading" style="font-size:1rem;margin-bottom:12px;">Bilan de la journée</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div>
+        <div class="t-label">Argent</div>
+        <div class="t-mono" style="font-size:1.2rem;color:${G.money>300?'var(--accent)':G.money>100?'var(--warn)':'var(--danger)'};">${G.money}€</div>
+      </div>
+      <div>
+        <div class="t-label">Réputation</div>
+        <div class="t-mono" style="font-size:1.2rem;">${G.reputation}/100</div>
+      </div>
+    </div>
+  </div>`;
+  
+  html += `<div class="t-label" style="margin-bottom:8px;">État de l'équipe</div>`;
+  html += `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:20px;">`;
+  G.detectives.forEach(d => {
+    html += `<div class="det-card ${d.indisponible>0?'disabled':''}">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+        <span class="t-heading" style="font-size:0.95rem;">${d.nom}</span>
+        <span class="t-label">${d.age} ans</span>
+      </div>
       ${renderStatPips(d)}
-      <div class="det-traits">${traitsHtml}</div>
-      <div class="salary-label t-label" style="margin-top:8px;">${d.salaire}€/jour</div>
-      ${unavail && d.indisponible>0?`<div class="det-status unavail">Indisponible — ${d.indisponible}j</div>`:''}
+      <div class="det-traits">${renderTraits(d.traits)}</div>
+      ${d.indisponible > 0 ? `<div class="t-label" style="margin-top:8px;color:var(--danger);">Indisponible ${d.indisponible} jour${d.indisponible>1?'s':''}</div>` : ''}
     </div>`;
   });
   html += `</div>`;
-
-  // Bonus
-  html += `<div class="section-label">Carte bonus — optionnel</div>`;
-  html += `<div class="grid-2" style="margin-bottom:20px;">`;
-  G.bonusCards.forEach(b => {
-    const usedInAsgn = Object.values(G.assignments).find(a=>a.bonusId===b.id);
-    let cls = b.used || usedInAsgn ? 'used' : '';
-    if (G.selectedBonus && G.selectedBonus.id === b.id) cls = 'selected';
-    html += `<div class="bonus-card ${cls}" onclick="selectBonus(${b.id})"><div class="bonus-title t-heading">${b.titre}</div><div class="bonus-effect">${b.effet}</div>${b.negatif?`<div class="bonus-neg">${b.negatif}</div>`:''}</div>`;
-  });
-  html += `</div>`;
-
-  // Assign button - MORE VISIBLE
-  if (G.selectedCrime && G.selectedDet) {
-    html += `<div style="margin-bottom:20px;text-align:center;"><button class="btn assign-cta" onclick="assignSelected()">→ Assigner ${G.selectedDet.nom} à "${G.selectedCrime.titre}" ←</button></div>`;
-  }
-
+  
   main.innerHTML = html;
-
-  const canResolve = Object.keys(G.assignments).length > 0;
-  document.getElementById('btn-action').textContent = canResolve ? 'Lancer les enquêtes →' : 'Passer (ignorer tout)';
-  document.getElementById('btn-action').onclick = resolveAll;
+  document.getElementById('btn-action').textContent = 'Jour Suivant';
+  document.getElementById('btn-action').onclick = nextDay;
 }
 
-function renderCrimeCard(c, clickable, extraCls='', assignedDet=null) {
-  const onclick = clickable && !assignedDet ? `onclick="selectCrime(${c.id})"` : '';
-  const isFantastique = c.tag === 'Fantastique';
-  return `<div class="crime-card ${extraCls}" ${onclick} style="animation-delay:${c.id*40}ms">
-    <span class="crime-tag ${isFantastique?'fantastique':''}">${c.tag}</span>
-    <div class="crime-header">
-      <span class="crime-title t-heading">${c.titre}</span>
-      <span class="crime-reward">${c.recompense}€</span>
-    </div>
-    <div class="crime-desc">${c.desc}</div>
-    <div class="crime-stats">
-      <div class="stat-pip"><span class="pip-label">Action</span><div class="pips">${renderPips(c.action,'action')}</div></div>
-      <div class="stat-pip"><span class="pip-label">Réflexion</span><div class="pips">${renderPips(c.reflexion,'reflexion')}</div></div>
-      <div class="stat-pip"><span class="pip-label">Danger</span><div class="pips">${renderPips(c.danger,'danger')}</div></div>
-    </div>
-    ${assignedDet?`<div class="assigned-label">↳ ${assignedDet.nom}</div>`:''}
-  </div>`;
+function nextDay() {
+  G.day++;
+  startMorning();
 }
 
-function renderPips(val, type) {
-  let html='';
-  for(let i=1;i<=5;i++) html+=`<div class="pip ${i<=val?'on':''} ${type}"></div>`;
+/* ══════════════════════════════════════════════
+   RENDERING HELPERS
+══════════════════════════════════════════════ */
+function renderStatPips(det) {
+  const stats = [
+    {label:'Action', val:det.action, color:'#c8b896'},
+    {label:'Réflexion', val:det.reflexion, color:'#7a9ab5'},
+    {label:'Danger', val:det.danger, color:'#8b3a3a'}
+  ];
+  let html = '<div class="stat-pips">';
+  stats.forEach(s => {
+    html += `<div class="pip-row">
+      <span class="pip-label">${s.label}</span>
+      <div class="pips">`;
+    for(let i=0; i<5; i++) {
+      html += `<div class="pip ${i<s.val?'filled':''}" style="--pip-color:${s.color}"></div>`;
+    }
+    html += `</div></div>`;
+  });
+  html += '</div>';
   return html;
 }
 
-function renderStatPips(d) {
-  return `<div class="crime-stats" style="margin-top:6px;">
-    <div class="stat-pip"><span class="pip-label">Act</span><div class="pips">${renderPips(d.action,'action')}</div></div>
-    <div class="stat-pip"><span class="pip-label">Réf</span><div class="pips">${renderPips(d.reflexion,'reflexion')}</div></div>
-    <div class="stat-pip"><span class="pip-label">Dng</span><div class="pips">${renderPips(d.danger,'danger')}</div></div>
-  </div>`;
+function renderStatPipsForCrime(crime) {
+  const stats = [
+    {label:'Action', val:crime.action, color:'#c8b896'},
+    {label:'Réflexion', val:crime.reflexion, color:'#7a9ab5'},
+    {label:'Danger', val:crime.danger, color:'#8b3a3a'}
+  ];
+  let html = '<div class="stat-pips">';
+  stats.forEach(s => {
+    html += `<div class="pip-row">
+      <span class="pip-label">${s.label}</span>
+      <div class="pips">`;
+    for(let i=0; i<5; i++) {
+      html += `<div class="pip ${i<s.val?'filled':''}" style="--pip-color:${s.color}"></div>`;
+    }
+    html += `</div></div>`;
+  });
+  html += '</div>';
+  return html;
 }
 
-function renderResults() {
-  const main = document.getElementById('main');
-  let html = `<div class="phase-header"><div class="phase-title t-title">Résultats</div><div class="phase-sub">Bilan de la journée d'enquête.</div></div>`;
-
-  html += `<div style="display:flex;flex-direction:column;gap:1px;margin-bottom:24px;">`;
-  G.results.forEach(r => {
-    const cls = r.outcome==='success'?'s':r.outcome==='ignored'?'i':'f';
-    const moneyStr = r.money >= 0 ? `+${r.money}€` : `${r.money}€`;
-    const moneyCls = r.money >= 0 ? 'pos' : 'neg';
-    html += `<div class="result-row">
-      <span class="result-crime t-heading">${r.crime.titre}</span>
-      <span class="result-outcome ${cls}">${r.outcome==='success'?'Résolu':r.outcome==='ignored'?'Ignoré':'Échec'}</span>
-      <span class="result-money ${moneyCls}">${moneyStr}</span>
-    </div>`;
-  });
-  html += `</div>`;
-
-  // Stories
-  html += `<div class="section-label">Récits</div>`;
-  G.results.filter(r=>r.story).forEach(r => {
-    html += `<div class="modal-result ${r.outcome}" style="margin-bottom:8px;">
-      <div class="result-label ${r.outcome}">${r.crime.titre} — ${r.outcome==='success'?'Résolu':'Échec'}</div>
-      <div class="result-text">${r.story}</div>
-    </div>`;
-  });
-
-  main.innerHTML = html;
-  document.getElementById('btn-action').textContent = 'Fin de journée →';
-  document.getElementById('btn-action').onclick = startEvening;
-}
-
-function renderEvening(salaries, rent) {
-  const main = document.getElementById('main');
-  let html = `<div class="phase-header"><div class="phase-title t-title">Fin de Journée</div><div class="phase-sub">Bilan financier et état de l'agence.</div></div>`;
-
-  html += `<div class="card" style="margin-bottom:12px;">
-    <div class="section-label">Finances</div>
-    <div class="result-row"><span>Salaires versés</span><span class="result-money neg">-${salaries}€</span></div>
-    <div class="result-row"><span>Loyer</span><span class="result-money neg">-${rent}€</span></div>
-    <div class="result-row"><span>Solde restant</span><span class="result-money ${G.money>200?'pos':G.money>0?'':''}">${G.money}€</span></div>
-  </div>`;
-
-  html += `<div class="card" style="margin-bottom:12px;">
-    <div class="section-label">État des enquêteurs</div>`;
-  G.detectives.forEach(d => {
-    html += `<div class="result-row">
-      <span class="t-heading" style="font-size:0.95rem;">${d.nom}</span>
-      <span class="t-mono" style="color:var(--text-muted);">${d.age} ans</span>
-      <span class="t-label">${d.indisponible>0?`Indisponible ${d.indisponible}j`:d.malade?'Malade':'Disponible'}</span>
-    </div>`;
-  });
-  html += `</div>`;
-
-  main.innerHTML = html;
-  document.getElementById('btn-action').textContent = `Jour ${G.day} →`;
-  document.getElementById('btn-action').onclick = startMorning;
+function renderTraits(traits) {
+  return traits.map(t => {
+    const typeClass = t.type === 'positive' ? 'positive' : 
+                     t.type === 'negative' ? 'negative' : 
+                     t.type === 'corrupt' ? 'corrupt' : 
+                     t.type === 'sick' ? 'sick' : 'neutral';
+    return `<span class="trait ${typeClass}" data-tooltip="${t.tooltip}">${t.nom}</span>`;
+  }).join('');
 }
 
 /* ══════════════════════════════════════════════
-   INTERACTIONS
-══════════════════════════════════════════════ */
-function selectCrime(id) {
-  if (G.phase !== 'assign') return;
-  const crime = G.crimes.find(c=>c.id===id);
-  if (G.assignments[id]) return;
-  G.selectedCrime = (G.selectedCrime && G.selectedCrime.id===id) ? null : crime;
-  tryAutoAssign();
-  renderAssign();
-}
-
-function selectDet(id) {
-  if (G.phase !== 'assign') return;
-  const det = G.detectives.find(d=>d.id===id);
-  if (det.indisponible > 0) return;
-  const usedDetIds = new Set(Object.values(G.assignments).map(a=>a.detId));
-  if (usedDetIds.has(id)) return;
-  G.selectedDet = (G.selectedDet && G.selectedDet.id===id) ? null : det;
-  tryAutoAssign();
-  renderAssign();
-}
-
-function selectBonus(id) {
-  if (G.phase !== 'assign') return;
-  const bonus = G.bonusCards.find(b=>b.id===id);
-  const usedInAsgn = Object.values(G.assignments).find(a=>a.bonusId===id);
-  if (usedInAsgn) return;
-  G.selectedBonus = (G.selectedBonus && G.selectedBonus.id===id) ? null : bonus;
-  renderAssign();
-}
-
-function tryAutoAssign() {
-  if (G.selectedCrime && G.selectedDet) {
-    // highlight only, don't auto-assign
-  }
-}
-
-function assignSelected() {
-  if (!G.selectedCrime || !G.selectedDet) return;
-  G.assignments[G.selectedCrime.id] = {
-    detId: G.selectedDet.id,
-    bonusId: G.selectedBonus ? G.selectedBonus.id : null,
-  };
-  addLog(`${G.selectedDet.nom} assigné(e) à "${G.selectedCrime.titre}".`, 'system');
-  G.selectedCrime = null;
-  G.selectedDet = null;
-  G.selectedBonus = null;
-  renderAssign();
-}
-
-/* ══════════════════════════════════════════════
-   HIRE
+   MODALS
 ══════════════════════════════════════════════ */
 function openHireModal() {
   const content = document.getElementById('modal-content');
-  let html = `<div class="modal-title t-title">Recruter</div><div class="modal-label">Candidats disponibles</div>`;
   const alreadyHiredIds = new Set(G.detectives.map(d=>d.id));
-
+  
+  let html = `<div class="modal-title t-title">Recruter un Détective</div>
+    <div class="modal-label">Candidats Disponibles</div>`;
+  
   HIRE_CANDIDATES.filter(c=>!alreadyHiredIds.has(c.id)).forEach(c => {
     const traitsHtml = c.traits.map(t => {
-      const traitClass = t.type === 'corrupt' ? 'corrupt' : t.type === 'sick' ? 'sick' : t.type === 'positive' ? 'positive' : '';
+      const traitClass = t.type === 'positive' ? 'positive' : 
+                        t.type === 'negative' ? 'negative' : 
+                        t.type === 'corrupt' ? 'corrupt' : 
+                        t.type === 'sick' ? 'sick' : 'neutral';
       return `<span class="trait ${traitClass}" data-tooltip="${t.tooltip}">${t.nom}</span>`;
     }).join('');
     
@@ -753,7 +720,7 @@ function updateUI() {
   document.getElementById('ui-money').textContent = `${G.money}€`;
   document.getElementById('ui-money').className = `stat-val ${G.money>300?'good':G.money>100?'warn':'danger'}`;
   document.getElementById('ui-rep').textContent = G.reputation;
-  document.getElementById('ui-rep').className = `stat-val ${G.reputation>60?'good':G.reputation>30?'':' danger'}`;
+  document.getElementById('ui-rep').className = `stat-val ${G.reputation>60?'good':G.reputation>30?'':'danger'}`;
   document.getElementById('ui-rep-bar').style.width = G.reputation+'%';
   const avail = G.detectives.filter(d=>d.indisponible===0).length;
   const total = G.detectives.length;
