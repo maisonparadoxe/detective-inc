@@ -91,11 +91,11 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Inter',sans-ser
 #game {
   display: grid;
   grid-template-rows: auto 1fr auto;
-  grid-template-columns: 1fr;  /* ← AJOUTE CETTE LIGNE */
+  grid-template-columns: 1fr;
   height: 100vh;
   max-width: 960px;
   margin: 0 auto;
-  width: 100%;  /* ← AJOUTE CETTE LIGNE AUSSI */
+  width: 100%;
 }
 @media(max-width:600px){#game{height:auto;min-height:100vh;}}
 #topbar{border-bottom:1px solid var(--border);padding:12px 24px;display:flex;justify-content:space-between;align-items:center;background:var(--bg-raised);}
@@ -311,8 +311,8 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Inter',sans-ser
   /* Scroll natif — pas de layout fixe */
   html,body{height:auto;overflow:auto;}
   #game{
-    display:flex;
-    flex-direction:column;
+    display:grid;
+    grid-template-rows: auto 1fr auto;
     height:auto;
     min-height:100vh;
   }
