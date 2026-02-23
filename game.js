@@ -79,7 +79,7 @@ let G = {};
 
 function initGame() {
   document.getElementById('gameover').classList.remove('active');
-  document.getElementById('game').style.display = 'flex';
+  document.getElementById('game').style.display = 'grid';
   G = {
     day: 1,
     money: 800,
