@@ -138,6 +138,7 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Inter',sans-ser
 .pip-label{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted);}
 .pips{display:flex;gap:2px;}
 .pip{width:8px;height:8px;border:1px solid var(--border);}
+.pip.filled{background:var(--pip-color);}
 .pip.on.action{background:#c8b896;}
 .pip.on.reflexion{background:#7a9ab5;}
 .pip.on.danger{background:#8b3a3a;}
