@@ -134,7 +134,9 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Inter',sans-ser
 .crime-reward{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--accent);letter-spacing:0.1em;white-space:nowrap;}
 .crime-desc{color:var(--text-secondary);font-size:0.82rem;line-height:1.65;margin-bottom:12px;}
 .crime-stats{display:flex;gap:12px;}
+.stat-pips{display:flex;flex-direction:column;gap:6px;margin:8px 0;}
 .stat-pip{display:flex;align-items:center;gap:6px;}
+.pip-row{display:flex;align-items:center;gap:6px;}
 .pip-label{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted);}
 .pips{display:flex;gap:2px;}
 .pip{width:8px;height:8px;border:1px solid var(--border);}
@@ -147,11 +149,12 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Inter',sans-ser
 .assigned-label{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--success);margin-top:8px;}
 
 /* ── DETECTIVE CARD ── */
-.detective-card{border:1px solid var(--border);background:var(--bg-card);padding:14px 18px;cursor:pointer;transition:border-color 180ms ease;animation:fadeUp 300ms ease backwards;}
-.detective-card:hover:not(.unavailable){border-color:var(--border-active);}
-.detective-card.selected{border-color:var(--accent-dim);background:#181510;}
-.detective-card.unavailable{opacity:0.35;cursor:not-allowed;}
-.detective-card.corrupt{border-color:var(--danger-dim);}
+.detective-card, .det-card{border:1px solid var(--border);background:var(--bg-card);padding:14px 18px;cursor:pointer;transition:border-color 180ms ease;animation:fadeUp 300ms ease backwards;}
+.detective-card:hover:not(.unavailable):not(.disabled), .det-card:hover:not(.unavailable):not(.disabled){border-color:var(--border-active);}
+.detective-card.selected, .det-card.selected{border-color:var(--accent-dim);background:#181510;}
+.detective-card.unavailable, .det-card.unavailable{opacity:0.35;cursor:not-allowed;}
+.detective-card.disabled, .det-card.disabled{opacity:0.5;cursor:not-allowed;}
+.detective-card.corrupt, .det-card.corrupt{border-color:var(--danger-dim);}
 .det-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
 .det-name{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1rem;}
 .det-age{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--text-muted);}
